@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import VueQueryBuilder from './VueQueryBuilder.vue'
-
+import Vuetify from 'vuetify'
+import "vuetify/dist/vuetify.min.css";
 Vue.config.productionTip = false
+Vue.use(Vuetify)
 
 let rules = [
     {
@@ -48,7 +50,11 @@ let rules = [
 
 new Vue({
   el: '#app',
-
+  vuetify: new Vuetify({
+    icons: {
+      iconfont: 'fa',
+    },
+  }),
   components: { VueQueryBuilder },
 
   data: {

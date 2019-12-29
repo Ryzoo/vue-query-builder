@@ -1,38 +1,28 @@
 {
-  "name": "vue-query-builder",
-  "version": "0.7.1",
+  "name": "vue-query-builder-vuetifyjs",
+  "version": "0.7.0",
+  "description": "Vue Query Builder is a user interface that makes it easy for your users to create queries of any kind. It's useful if you need an interface for generating reports, filtering data, and more. This fork move it to Vuetify.js",
   "main": "./dist/VueQueryBuilder.common.js",
   "scripts": {
     "serve": "vue-cli-service serve --name VueQueryBuilder src/main.js",
-    "build": "vue-cli-service build --target lib --name VueQueryBuilder src/VueQueryBuilder.vue",
-    "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "build": "vue-cli-service build --target lib --name VueQueryBuilder src/VueQueryBuilder.vue"
   },
   "dependencies": {
-    "vue": "^2.6.10"
+    "vue": "^2.6.11",
+    "vuetify": "^2.1.15"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.4.0",
-    "@vue/cli-plugin-e2e-cypress": "^3.4.0",
-    "@vue/cli-plugin-eslint": "^3.4.0",
-    "@vue/cli-plugin-unit-jest": "^3.4.0",
-    "@vue/cli-service": "^3.4.0",
-    "@vue/eslint-config-standard": "^3.0.5",
-    "@vue/test-utils": "^1.0.0-beta.29",
+    "@vue/cli-plugin-babel": "^4.1.2",
+    "@vue/cli-service": "^4.1.2",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "^24.8.0",
-    "bootstrap": "^3.4.0",
-    "less": "^3.9.0",
-    "less-loader": "^4.1.0",
-    "node-sass": "^4.11.0",
-    "sass-loader": "^7.1.0",
-    "vue-template-compiler": "^2.6.5",
-    "vuepress": "1.0.2",
-    "@vuepress/core": "1.0.2",
-    "@vuepress/theme-default": "1.0.2"
+    "deepmerge": "^4.2.2",
+    "fibers": "^4.0.2",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "node-sass": "^4.13.0",
+    "sass": "^1.24.0",
+    "sass-loader": "^8.0.0",
+    "vue-template-compiler": "^2.6.11"
   },
   "browserslist": [
     "> 1%",
