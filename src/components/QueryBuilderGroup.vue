@@ -21,7 +21,7 @@
         </v-card-title>
         <v-card-text>
             <v-row>
-                <v-col sm="12" class="mb-2 speed-dial-container">
+                <v-col cols="12" class="mb-2 speed-dial-container">
                     <v-divider/>
                     <v-speed-dial
                             v-model="fab"
@@ -57,7 +57,7 @@
                         </v-btn>
                     </v-speed-dial>
                 </v-col>
-                <v-col sm="12" >
+                <v-col cols="12" >
                     <div class="group-child px-5 py-2">
                         <v-alert
                                 v-if="query.children.length === 0"
