@@ -8,4 +8,4 @@ Vue Query Builder is a user interface that makes it easy for your users to creat
 This for move it to Vuetify.js
 
 
-![Demo Screenshot](https://raw.githubusercontent.com/Ryzoo/vue-query-builder/blob/dev/public/demo-screenshot.png "Demo screenshot")
+![Demo Screenshot](https://raw.githubusercontent.com/Ryzoo/vue-query-builder/dev/public/demo-screenshot.png "Demo screenshot")
