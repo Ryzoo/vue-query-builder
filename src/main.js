@@ -7,8 +7,6 @@ Vue.config.productionTip = false
 Vue.use(Vuetify)
 
 import {RuleTypes} from './utilities.js';
-import ModelObjectToTextParser from "./Parsers/ModelObjectToTextParser";
-import ModelTextToObjectParser from "./Parsers/ModelTextToObjectParser";
 
 let rules = [
 	{
