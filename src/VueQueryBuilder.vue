@@ -1,5 +1,5 @@
 <template>
-    <div class="vue-query-builder" :class="{ 'vue-query-builder-styled': styled }">
+    <div class="vue-query-builder vue-query-builder-styled" >
         <query-builder-group
             :index="0"
             :query.sync="query"
@@ -7,7 +7,6 @@
             :rules="mergedRules"
             :maxDepth="maxDepth"
             :depth="depth"
-            :styled="styled"
             :labels="mergedLabels"
             type="query-builder-group"
         />
@@ -16,9 +15,9 @@
 
 <script>
 	import QueryBuilderGroup from './components/QueryBuilderGroup.vue';
-	import deepClone from './utilities.js';
+	import { deepClone, RuleTypes, OperatorType } from './utilities.js';
 
-	var defaultLabels = {
+	const defaultLabels = {
 		matchType: "Match Type",
 		matchTypeAll: "All",
 		matchTypeAny: "Any",
@@ -44,10 +43,6 @@
 					return defaultLabels;
 				}
 			},
-			styled: {
-				type: Boolean,
-				default: true
-			},
 			maxDepth: {
 				type: Number,
 				default: 3,
@@ -62,48 +57,25 @@
 			return {
 				depth: 1,
 				query: {
-					logicalOperator: "All",
+					operator: "All",
 					children: []
 				},
 				ruleTypes: {
-					"text": {
-						operators: ['equals', 'does not equal', 'contains', 'does not contain', 'is empty', 'is not empty', 'begins with', 'ends with'],
-						inputType: "text",
-						id: "text-field"
+					[RuleTypes.TEXT]: {
+						operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.CONTAINS, OperatorType.N_CONTAINS, OperatorType.EMPTY, OperatorType.N_EMPTY, OperatorType.BEGINS_WITH, OperatorType.ENDS_WITH],
+						inputType: RuleTypes.TEXT,
 					},
-					"numeric": {
-						operators: ['=', '<>', '<', '<=', '>', '>='],
-						inputType: "number",
-						id: "number-field"
+					[RuleTypes.NUMBER]: {
+						operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.CONTAINS, OperatorType.N_CONTAINS, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL],
+						inputType: RuleTypes.NUMBER,
 					},
-					"custom": {
-						operators: [],
-						inputType: "text",
-						id: "custom-field"
+					[RuleTypes.SELECT]: {
+						operators: [OperatorType.EQUAL, OperatorType.N_EQUAL],
+						inputType: RuleTypes.SELECT,
 					},
-					"radio": {
-						operators: [],
-						choices: [],
-						inputType: "radio",
-						id: "radio-field"
-					},
-					"checkbox": {
-						operators: [],
-						choices: [],
-						inputType: "checkbox",
-						id: "checkbox-field"
-					},
-					"select": {
-						operators: ['=', '<>'],
-						choices: [],
-						inputType: "select",
-						id: "select-field"
-					},
-					"multi-select": {
-						operators: ['='],
-						choices: [],
-						inputType: "select",
-						id: "multi-select-field"
+					[RuleTypes.MULTI_SELECT]: {
+						operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.CONTAINS, OperatorType.N_CONTAINS, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL],
+						inputType: RuleTypes.MULTI_SELECT,
 					},
 				}
 			}
@@ -115,12 +87,12 @@
 			},
 
 			mergedRules() {
-				var mergedRules = [];
-				var vm = this;
+				let mergedRules = [];
+				const self = this;
 
-				vm.rules.forEach(function (rule) {
-					if (typeof vm.ruleTypes[rule.type] !== "undefined") {
-						mergedRules.push(Object.assign({}, vm.ruleTypes[rule.type], rule));
+				this.rules.forEach(function (rule) {
+					if (typeof self.ruleTypes[rule.type] !== "undefined") {
+						mergedRules.push(Object.assign({}, self.ruleTypes[rule.type], rule));
 					} else {
 						mergedRules.push(rule);
 					}
@@ -133,14 +105,12 @@
 		mounted() {
 			this.$watch(
 				'query',
-				newQuery => {
-					this.$emit('input', deepClone(newQuery));
-				}, {
-					deep: true
-				});
+				newQuery => { this.$emit('input', deepClone(newQuery)) },
+                { deep: true }
+            );
 
 			if (typeof this.$options.propsData.value !== "undefined") {
-				this.query = Object.assign(this.query, this.$options.propsData.value);
+				this.query = Object.assign(this.query, this.$options.propsData.value)
 			}
 		}
 	}

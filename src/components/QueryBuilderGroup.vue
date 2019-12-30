@@ -2,7 +2,7 @@
     <v-card  class="vqb-group" :class="classObject">
         <v-card-title>
             <v-select
-                    v-model="query.logicalOperator"
+                    v-model="query.operator"
                     :items="logicalOperatorList"
                     :label="labels.matchType"
                     outlined
@@ -68,20 +68,19 @@
                             No rules here! Add some <b>rules</b> or <b>group of rules</b> using button above.
                         </v-alert>
                         <component
-                                v-for="(child, index) in query.children"
-                                :key="index"
-                                :is="child.type"
-                                :type="child.type"
-                                :query.sync="child.query"
-                                :ruleTypes="ruleTypes"
-                                :rules="rules"
-                                :rule="ruleById(child.query.rule)"
-                                :index="index"
-                                :maxDepth="maxDepth"
-                                :depth="depth + 1"
-                                :styled="styled"
-                                :labels="labels"
-                                v-on:child-deletion-requested="removeChild">
+                            v-for="(child, index) in query.children"
+                            :key="index"
+                            :is="child.type === 'rule' ? 'query-builder-rule' : 'query-builder-group' "
+                            :type="child.type"
+                            :query.sync="child.query"
+                            :ruleTypes="ruleTypes"
+                            :rules="rules"
+                            :rule="ruleById(child.query.id)"
+                            :index="index"
+                            :maxDepth="maxDepth"
+                            :depth="depth + 1"
+                            :labels="labels"
+                            v-on:child-deletion-requested="removeChild">
                         </component>
                     </div>
                 </v-col>
@@ -112,7 +111,7 @@
 
 <script>
 	import QueryBuilderRule from './QueryBuilderRule.vue';
-	import deepClone from '../utilities.js';
+	import {deepClone} from '../utilities.js';
 
 	export default {
 		name: "query-builder-group",
@@ -121,7 +120,7 @@
 			QueryBuilderRule
 		},
 
-		props: ['ruleTypes', 'type', 'query', 'rules', 'index', 'maxDepth', 'depth', 'styled', 'labels'],
+		props: ['ruleTypes', 'type', 'query', 'rules', 'index', 'maxDepth', 'depth', 'labels'],
 
 		methods: {
 			tryAddRule() {
@@ -134,20 +133,17 @@
 			addRule() {
 				this.showRuleDialog = false;
 				let updated_query = deepClone(this.query);
-				let child = {
-					type: 'query-builder-rule',
+
+				updated_query.children.push({
+					type: 'rule',
 					query: {
-						rule: this.selectedRule.id,
-						selectedOperator: this.selectedRule.operators[0],
-						selectedOperand: typeof this.selectedRule.operands === "undefined" ? this.selectedRule.label : this.selectedRule.operands[0],
-						value: null
+						id: this.selectedRule.id,
+						operator: this.selectedRule.operators[0],
+						value: null,
+						ruleType: this.selectedRule.type
 					}
-				};
-				// A bit hacky, but `v-model` on `select` requires an array.
-				if (this.ruleById(child.query.rule).type === 'multi-select') {
-					child.query.value = [];
-				}
-				updated_query.children.push(child);
+				});
+
 				this.$emit('update:query', updated_query);
 			},
 
@@ -155,9 +151,9 @@
 				let updated_query = deepClone(this.query);
 				if (this.depth < this.maxDepth) {
 					updated_query.children.push({
-						type: 'query-builder-group',
+						type: 'group',
 						query: {
-							logicalOperator: this.labels.matchTypeAll,
+							operator: this.labels.matchTypeAll,
 							children: []
 						}
 					});
@@ -196,7 +192,7 @@
 			},
 			classObject() {
 				let classObject = {}
-				classObject['depth-' + this.depth.toString()] = this.styled;
+				classObject['depth-' + this.depth.toString()] = true;
 				return classObject;
 			}
 		}

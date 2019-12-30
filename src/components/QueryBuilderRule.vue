@@ -1,5 +1,5 @@
 <template>
-    <v-card  class="vqb-rule">
+    <v-card class="vqb-rule">
         <v-card-text>
             <v-btn
                     class="remove-button"
@@ -11,94 +11,48 @@
             </v-btn>
 
             <v-row>
-                <v-col cols="auto" class="d-flex align-center">
+                <v-col cols="12" sm="6" md="2" class="d-flex align-center">
                     <b>{{ rule.label }}</b>
                 </v-col>
-                <v-col v-if="rule.operands || !isMultipleChoice">
+                <v-col cols="12" sm="6" md="4" >
                     <v-select
                             hide-details
-                            v-if="rule.operands"
-                            v-model="query.selectedOperand"
-                            :items="rule.operands"
-                            :label="rule.label"
+                            v-model="query.operator"
+                            :items="mappedOperators"
                             outlined
                             dense
-                    />
-                    <v-select
-                            hide-details
-                            v-if="!isMultipleChoice"
-                            v-model="query.selectedOperator"
-                            :items="rule.operators"
-                            outlined
-                            dense
+                            label="Rule"
                     />
                 </v-col>
-                <v-col>
+                <v-col cols="12" sm="12" md="6">
                     <v-text-field
                             hide-details
                             outlined
-                            v-if="rule.inputType === 'text'"
+                            v-if="rule.inputType === RuleTypes.TEXT"
                             type="text"
                             v-model="query.value"
                             dense
-                            :placeholder="labels.textInputPlaceholder"
+                            label="Value"
                     />
                     <v-text-field
                             hide-details
                             outlined
-                            v-if="rule.inputType === 'number'"
+                            v-if="rule.inputType === RuleTypes.NUMBER"
                             type="number"
                             v-model="query.value"
                             dense
+                            label="Value"
                     />
-
-                    <template v-if="isCustomComponent">
-                        <component
-                                :value="query.value"
-                                @input="updateQuery"
-                                :is="rule.component"
-                        />
-                    </template>
-
-                    <div class="checkbox" v-if="rule.inputType === 'checkbox'">
-                        <v-checkbox
-                                hide-details
-                                v-for="choice in rule.choices"
-                                :key="choice.value"
-                                dense
-                                v-model="query.value"
-                                :value="choice.value"
-                                :label="choice.label"
-                        />
-                    </div>
-
-                    <div class="radio" v-if="rule.inputType === 'radio'">
-                        <v-radio-group
-                                class="mt-0"
-                                hide-details
-                                v-model="query.value"
-                                :mandatory="false"
-                                dense
-                        >
-                            <v-radio
-                                    hide-details
-                                    v-for="choice in rule.choices"
-                                    dense
-                                    :key="choice.value"
-                                    :label="choice.label"
-                                    :value="choice.value"
-                            />
-                        </v-radio-group>
-                    </div>
 
                     <v-select
                             hide-details
                             dense
-                            v-if="rule.inputType === 'select'"
+                            v-if="rule.inputType === RuleTypes.SELECT || rule.inputType === RuleTypes.MULTI_SELECT"
                             v-model="query.value"
                             :items="selectOptions"
-                            :multiple="rule.type === 'multi-select'"
+                            :multiple="rule.inputType === RuleTypes.MULTI_SELECT"
                             outlined
+                            label="Value"
                     />
                 </v-col>
             </v-row>
@@ -107,12 +61,19 @@
 </template>
 
 <script>
-	import deepClone from '../utilities.js';
+	import {deepClone, RuleTypes, mapOperators} from '../utilities.js';
 
 	export default {
 		name: "query-builder-rule",
 
-		props: ['query', 'index', 'rule', 'styled', 'labels'],
+		props: ['query', 'index', 'rule', 'labels'],
+
+		data() {
+			return {
+				RuleTypes,
+				mappedOperators: mapOperators(this.rule.operators)
+			}
+		},
 
 		beforeMount() {
 			if (this.rule.type === 'custom-component') {
@@ -132,19 +93,15 @@
 		},
 
 		computed: {
-			isMultipleChoice() {
-				return ['radio', 'checkbox', 'select'].indexOf(this.rule.inputType) >= 0;
-			},
-
 			isCustomComponent() {
 				return this.rule.type === 'custom-component';
 			},
 
 			selectOptions() {
-				if (typeof this.rule.choices === 'undefined') {
+				if (typeof this.rule.options === 'undefined') {
 					return {};
 				}
-                return this.rule.choices.map((x) => ({
+				return this.rule.options.map((x) => ({
 					text: x.label,
 					value: x.value
 				}));
