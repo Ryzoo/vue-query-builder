@@ -2321,34 +2321,6 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "c975":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $ = __webpack_require__("23e7");
-var $indexOf = __webpack_require__("4d64").indexOf;
-var sloppyArrayMethod = __webpack_require__("b301");
-
-var nativeIndexOf = [].indexOf;
-
-var NEGATIVE_ZERO = !!nativeIndexOf && 1 / [1].indexOf(1, -0) < 0;
-var SLOPPY_METHOD = sloppyArrayMethod('indexOf');
-
-// `Array.prototype.indexOf` method
-// https://tc39.github.io/ecma262/#sec-array.prototype.indexof
-$({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || SLOPPY_METHOD }, {
-  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
-    return NEGATIVE_ZERO
-      // convert -0 to +0
-      ? nativeIndexOf.apply(this, arguments) || 0
-      : $indexOf(this, searchElement, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-
-/***/ }),
-
 /***/ "ca84":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3008,12 +2980,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"bd44cc92-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueQueryBuilder.vue?vue&type=template&id=2ad54b97&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-query-builder",class:{ 'vue-query-builder-styled': _vm.styled }},[_c('query-builder-group',{attrs:{"index":0,"query":_vm.query,"ruleTypes":_vm.ruleTypes,"rules":_vm.mergedRules,"maxDepth":_vm.maxDepth,"depth":_vm.depth,"styled":_vm.styled,"labels":_vm.mergedLabels,"type":"query-builder-group"},on:{"update:query":function($event){_vm.query=$event}}})],1)}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"bd44cc92-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueQueryBuilder.vue?vue&type=template&id=4985b760&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-query-builder vue-query-builder-styled"},[_c('query-builder-group',{attrs:{"index":0,"query":_vm.query,"ruleTypes":_vm.ruleTypes,"rules":_vm.mergedRules,"maxDepth":_vm.maxDepth,"depth":_vm.depth,"labels":_vm.mergedLabels,"type":"query-builder-group"},on:{"update:query":function($event){_vm.query=$event}}})],1)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueQueryBuilder.vue?vue&type=template&id=2ad54b97&
+// CONCATENATED MODULE: ./src/VueQueryBuilder.vue?vue&type=template&id=4985b760&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.number.constructor.js
 var es_number_constructor = __webpack_require__("a9e3");
@@ -3024,12 +2996,27 @@ var es_object_assign = __webpack_require__("cca6");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/web.dom-collections.for-each.js
 var web_dom_collections_for_each = __webpack_require__("159b");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"bd44cc92-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/QueryBuilderGroup.vue?vue&type=template&id=4a06bbde&
-var QueryBuilderGroupvue_type_template_id_4a06bbde_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-card',{staticClass:"vqb-group",class:_vm.classObject},[_c('v-card-title',[_c('v-select',{attrs:{"items":_vm.logicalOperatorList,"label":_vm.labels.matchType,"outlined":"","hide-details":"","dense":""},model:{value:(_vm.query.logicalOperator),callback:function ($$v) {_vm.$set(_vm.query, "logicalOperator", $$v)},expression:"query.logicalOperator"}}),(this.depth > 1)?_c('v-btn',{staticClass:"remove-button",attrs:{"color":"error","x-small":""},on:{"click":_vm.remove}},[_c('v-icon',{attrs:{"x-small":""}},[_vm._v("fa-times")])],1):_vm._e()],1),_c('v-card-text',[_c('v-row',[_c('v-col',{staticClass:"mb-2 speed-dial-container",attrs:{"cols":"12"}},[_c('v-divider'),_c('v-speed-dial',{attrs:{"bottom":"","left":"","direction":"right"},scopedSlots:_vm._u([{key:"activator",fn:function(){return [_c('v-btn',{attrs:{"color":"primary","x-small":"","fab":""},model:{value:(_vm.fab),callback:function ($$v) {_vm.fab=$$v},expression:"fab"}},[(_vm.fab)?_c('v-icon',[_vm._v("fa-times")]):_c('v-icon',[_vm._v("fa-plus")])],1)]},proxy:true}]),model:{value:(_vm.fab),callback:function ($$v) {_vm.fab=$$v},expression:"fab"}},[_c('v-btn',{attrs:{"color":"primary","small":""},on:{"click":_vm.tryAddRule}},[_vm._v(" Add Rule ")]),(this.depth < this.maxDepth)?_c('v-btn',{attrs:{"color":"primary","small":""},on:{"click":_vm.addGroup}},[_vm._v(" Add Groups ")]):_vm._e()],1)],1),_c('v-col',{attrs:{"cols":"12"}},[_c('div',{staticClass:"group-child px-5 py-2"},[(_vm.query.children.length === 0)?_c('v-alert',{attrs:{"dense":"","text":"","type":"info"}},[_vm._v(" No rules here! Add some "),_c('b',[_vm._v("rules")]),_vm._v(" or "),_c('b',[_vm._v("group of rules")]),_vm._v(" using button above. ")]):_vm._e(),_vm._l((_vm.query.children),function(child,index){return _c(child.type,{key:index,tag:"component",attrs:{"type":child.type,"query":child.query,"ruleTypes":_vm.ruleTypes,"rules":_vm.rules,"rule":_vm.ruleById(child.query.rule),"index":index,"maxDepth":_vm.maxDepth,"depth":_vm.depth + 1,"styled":_vm.styled,"labels":_vm.labels},on:{"update:query":function($event){return _vm.$set(child, "query", $event)},"child-deletion-requested":_vm.removeChild}})})],2)])],1)],1),_c('v-dialog',{attrs:{"persistent":"","max-width":"290"},model:{value:(_vm.showRuleDialog),callback:function ($$v) {_vm.showRuleDialog=$$v},expression:"showRuleDialog"}},[_c('v-card',[_c('v-card-title',{staticClass:"headline"},[_vm._v("Add new rule")]),_c('v-card-text',[_c('p',[_vm._v("Select an element to describe the rules")]),_c('v-select',{attrs:{"items":_vm.rulesList,"label":"Select rule","outlined":""},model:{value:(_vm.selectedRule),callback:function ($$v) {_vm.selectedRule=$$v},expression:"selectedRule"}})],1),_c('v-card-actions',[_c('v-spacer'),_c('v-btn',{attrs:{"color":"primary","text":""},on:{"click":function($event){_vm.showRuleDialog = false}}},[_vm._v("Cancel")]),_c('v-btn',{attrs:{"color":"primary"},on:{"click":_vm.addRule}},[_vm._v("Add new rule")])],1)],1)],1)],1)}
-var QueryBuilderGroupvue_type_template_id_4a06bbde_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"bd44cc92-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/QueryBuilderGroup.vue?vue&type=template&id=8f97ce04&
+var QueryBuilderGroupvue_type_template_id_8f97ce04_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-card',{staticClass:"vqb-group",class:_vm.classObject},[_c('v-card-title',[_c('v-select',{attrs:{"items":_vm.logicalOperatorList,"label":_vm.labels.matchType,"outlined":"","hide-details":"","dense":""},model:{value:(_vm.query.operator),callback:function ($$v) {_vm.$set(_vm.query, "operator", $$v)},expression:"query.operator"}}),(this.depth > 1)?_c('v-btn',{staticClass:"remove-button",attrs:{"color":"error","x-small":""},on:{"click":_vm.remove}},[_c('v-icon',{attrs:{"x-small":""}},[_vm._v("fa-times")])],1):_vm._e()],1),_c('v-card-text',[_c('v-row',[_c('v-col',{staticClass:"mb-2 speed-dial-container",attrs:{"cols":"12"}},[_c('v-divider'),_c('v-speed-dial',{attrs:{"bottom":"","left":"","direction":"right"},scopedSlots:_vm._u([{key:"activator",fn:function(){return [_c('v-btn',{attrs:{"color":"primary","x-small":"","fab":""},model:{value:(_vm.fab),callback:function ($$v) {_vm.fab=$$v},expression:"fab"}},[(_vm.fab)?_c('v-icon',[_vm._v("fa-times")]):_c('v-icon',[_vm._v("fa-plus")])],1)]},proxy:true}]),model:{value:(_vm.fab),callback:function ($$v) {_vm.fab=$$v},expression:"fab"}},[_c('v-btn',{attrs:{"color":"primary","small":""},on:{"click":_vm.tryAddRule}},[_vm._v(" Add Rule ")]),(this.depth < this.maxDepth)?_c('v-btn',{attrs:{"color":"primary","small":""},on:{"click":_vm.addGroup}},[_vm._v(" Add Groups ")]):_vm._e()],1)],1),_c('v-col',{attrs:{"cols":"12"}},[_c('div',{staticClass:"group-child px-5 py-2"},[(_vm.query.children.length === 0)?_c('v-alert',{attrs:{"dense":"","text":"","type":"info"}},[_vm._v(" No rules here! Add some "),_c('b',[_vm._v("rules")]),_vm._v(" or "),_c('b',[_vm._v("group of rules")]),_vm._v(" using button above. ")]):_vm._e(),_vm._l((_vm.query.children),function(child,index){return _c(child.type === 'rule' ? 'query-builder-rule' : 'query-builder-group',{key:index,tag:"component",attrs:{"type":child.type,"query":child.query,"ruleTypes":_vm.ruleTypes,"rules":_vm.rules,"rule":_vm.ruleById(child.query.id),"index":index,"maxDepth":_vm.maxDepth,"depth":_vm.depth + 1,"labels":_vm.labels},on:{"update:query":function($event){return _vm.$set(child, "query", $event)},"child-deletion-requested":_vm.removeChild}})})],2)])],1)],1),_c('v-dialog',{attrs:{"persistent":"","max-width":"290"},model:{value:(_vm.showRuleDialog),callback:function ($$v) {_vm.showRuleDialog=$$v},expression:"showRuleDialog"}},[_c('v-card',[_c('v-card-title',{staticClass:"headline"},[_vm._v("Add new rule")]),_c('v-card-text',[_c('p',[_vm._v("Select an element to describe the rules")]),_c('v-select',{attrs:{"items":_vm.rulesList,"label":"Select rule","outlined":""},model:{value:(_vm.selectedRule),callback:function ($$v) {_vm.selectedRule=$$v},expression:"selectedRule"}})],1),_c('v-card-actions',[_c('v-spacer'),_c('v-btn',{attrs:{"color":"primary","text":""},on:{"click":function($event){_vm.showRuleDialog = false}}},[_vm._v("Cancel")]),_c('v-btn',{attrs:{"color":"primary"},on:{"click":_vm.addRule}},[_vm._v("Add new rule")])],1)],1)],1)],1)}
+var QueryBuilderGroupvue_type_template_id_8f97ce04_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/QueryBuilderGroup.vue?vue&type=template&id=4a06bbde&
+// CONCATENATED MODULE: ./src/components/QueryBuilderGroup.vue?vue&type=template&id=8f97ce04&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.find.js
 var es_array_find = __webpack_require__("7db0");
@@ -3046,19 +3033,22 @@ var es_object_to_string = __webpack_require__("d3b7");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.regexp.to-string.js
 var es_regexp_to_string = __webpack_require__("25f0");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"bd44cc92-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/QueryBuilderRule.vue?vue&type=template&id=683482e6&
-var QueryBuilderRulevue_type_template_id_683482e6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-card',{staticClass:"vqb-rule"},[_c('v-card-text',[_c('v-btn',{staticClass:"remove-button",attrs:{"color":"error","x-small":""},on:{"click":_vm.remove}},[_c('v-icon',{attrs:{"x-small":""}},[_vm._v("fa-times")])],1),_c('v-row',[_c('v-col',{staticClass:"d-flex align-center",attrs:{"cols":"auto"}},[_c('b',[_vm._v(_vm._s(_vm.rule.label))])]),(_vm.rule.operands || !_vm.isMultipleChoice)?_c('v-col',[(_vm.rule.operands)?_c('v-select',{attrs:{"hide-details":"","items":_vm.rule.operands,"label":_vm.rule.label,"outlined":"","dense":""},model:{value:(_vm.query.selectedOperand),callback:function ($$v) {_vm.$set(_vm.query, "selectedOperand", $$v)},expression:"query.selectedOperand"}}):_vm._e(),(!_vm.isMultipleChoice)?_c('v-select',{attrs:{"hide-details":"","items":_vm.rule.operators,"outlined":"","dense":""},model:{value:(_vm.query.selectedOperator),callback:function ($$v) {_vm.$set(_vm.query, "selectedOperator", $$v)},expression:"query.selectedOperator"}}):_vm._e()],1):_vm._e(),_c('v-col',[(_vm.rule.inputType === 'text')?_c('v-text-field',{attrs:{"hide-details":"","outlined":"","type":"text","dense":"","placeholder":_vm.labels.textInputPlaceholder},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.rule.inputType === 'number')?_c('v-text-field',{attrs:{"hide-details":"","outlined":"","type":"number","dense":""},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.isCustomComponent)?[_c(_vm.rule.component,{tag:"component",attrs:{"value":_vm.query.value},on:{"input":_vm.updateQuery}})]:_vm._e(),(_vm.rule.inputType === 'checkbox')?_c('div',{staticClass:"checkbox"},_vm._l((_vm.rule.choices),function(choice){return _c('v-checkbox',{key:choice.value,attrs:{"hide-details":"","dense":"","value":choice.value,"label":choice.label},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}})}),1):_vm._e(),(_vm.rule.inputType === 'radio')?_c('div',{staticClass:"radio"},[_c('v-radio-group',{staticClass:"mt-0",attrs:{"hide-details":"","mandatory":false,"dense":""},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}},_vm._l((_vm.rule.choices),function(choice){return _c('v-radio',{key:choice.value,attrs:{"hide-details":"","dense":"","label":choice.label,"value":choice.value}})}),1)],1):_vm._e(),(_vm.rule.inputType === 'select')?_c('v-select',{attrs:{"hide-details":"","dense":"","items":_vm.selectOptions,"multiple":_vm.rule.type === 'multi-select',"outlined":""},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e()],2)],1)],1)],1)}
-var QueryBuilderRulevue_type_template_id_683482e6_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"bd44cc92-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/QueryBuilderRule.vue?vue&type=template&id=a1a18ab2&
+var QueryBuilderRulevue_type_template_id_a1a18ab2_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-card',{staticClass:"vqb-rule"},[_c('v-card-text',[_c('v-btn',{staticClass:"remove-button",attrs:{"color":"error","x-small":""},on:{"click":_vm.remove}},[_c('v-icon',{attrs:{"x-small":""}},[_vm._v("fa-times")])],1),_c('v-row',[_c('v-col',{staticClass:"d-flex align-center",attrs:{"cols":"12","sm":"6","md":"2"}},[_c('b',[_vm._v(_vm._s(_vm.rule.label))])]),_c('v-col',{attrs:{"cols":"12","sm":"6","md":"4"}},[_c('v-select',{attrs:{"hide-details":"","items":_vm.mappedOperators,"outlined":"","dense":"","label":"Rule"},model:{value:(_vm.query.operator),callback:function ($$v) {_vm.$set(_vm.query, "operator", $$v)},expression:"query.operator"}})],1),_c('v-col',{attrs:{"cols":"12","sm":"12","md":"6"}},[(_vm.rule.inputType === _vm.RuleTypes.TEXT)?_c('v-text-field',{attrs:{"hide-details":"","outlined":"","type":"text","dense":"","label":"Value"},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.rule.inputType === _vm.RuleTypes.NUMBER)?_c('v-text-field',{attrs:{"hide-details":"","outlined":"","type":"number","dense":"","label":"Value"},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.rule.inputType === _vm.RuleTypes.SELECT || _vm.rule.inputType === _vm.RuleTypes.MULTI_SELECT)?_c('v-select',{attrs:{"hide-details":"","dense":"","items":_vm.selectOptions,"multiple":_vm.rule.inputType === _vm.RuleTypes.MULTI_SELECT,"outlined":"","label":"Value"},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e()],1)],1)],1)],1)}
+var QueryBuilderRulevue_type_template_id_a1a18ab2_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/QueryBuilderRule.vue?vue&type=template&id=683482e6&
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.index-of.js
-var es_array_index_of = __webpack_require__("c975");
+// CONCATENATED MODULE: ./src/components/QueryBuilderRule.vue?vue&type=template&id=a1a18ab2&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.keys.js
 var es_object_keys = __webpack_require__("b64b");
 
+// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.symbol.js
 var es_symbol = __webpack_require__("a4d3");
 
@@ -3107,6 +3097,7 @@ function _typeof(obj) {
 
 
 
+
 var utilities_deepClone = function deepClone(obj) {
   if (Array.isArray(obj)) {
     return obj.map(deepClone);
@@ -3121,56 +3112,97 @@ var utilities_deepClone = function deepClone(obj) {
   }
 };
 
-/* harmony default export */ var utilities = (utilities_deepClone);
+var operatorToText = function operatorToText(operator) {
+  switch (operator) {
+    case utilities_OperatorType.EQUAL:
+      return "is equal";
+
+    case utilities_OperatorType.N_EQUAL:
+      return "is not equal";
+
+    case utilities_OperatorType.CONTAINS:
+      return "contains";
+
+    case utilities_OperatorType.N_CONTAINS:
+      return "not contains";
+
+    case utilities_OperatorType.EMPTY:
+      return "is empty";
+
+    case utilities_OperatorType.N_EMPTY:
+      return "is not empty";
+
+    case utilities_OperatorType.BEGINS_WITH:
+      return "begins with";
+
+    case utilities_OperatorType.ENDS_WITH:
+      return "ends with";
+
+    case utilities_OperatorType.GREATER:
+      return "is greater";
+
+    case utilities_OperatorType.GREATER_OR_EQUAL:
+      return "is greater or equals";
+
+    case utilities_OperatorType.SMALLER:
+      return "is smaller";
+
+    case utilities_OperatorType.SMALLER_OR_EQUAL:
+      return "is smaller or equals";
+  }
+
+  return "--- error, not defined ---";
+};
+
+var mapOperators = function mapOperators(operatorsArray) {
+  return operatorsArray.map(function (x) {
+    return {
+      text: operatorToText(x),
+      value: x
+    };
+  });
+};
+var utilities_RuleTypes = function RuleTypes() {
+  _classCallCheck(this, RuleTypes);
+};
+
+_defineProperty(utilities_RuleTypes, "NUMBER", 0);
+
+_defineProperty(utilities_RuleTypes, "TEXT", 1);
+
+_defineProperty(utilities_RuleTypes, "SELECT", 2);
+
+_defineProperty(utilities_RuleTypes, "MULTI_SELECT", 3);
+
+var utilities_OperatorType = function OperatorType() {
+  _classCallCheck(this, OperatorType);
+};
+
+_defineProperty(utilities_OperatorType, "EQUAL", 0);
+
+_defineProperty(utilities_OperatorType, "N_EQUAL", 1);
+
+_defineProperty(utilities_OperatorType, "CONTAINS", 2);
+
+_defineProperty(utilities_OperatorType, "N_CONTAINS", 3);
+
+_defineProperty(utilities_OperatorType, "EMPTY", 4);
+
+_defineProperty(utilities_OperatorType, "N_EMPTY", 5);
+
+_defineProperty(utilities_OperatorType, "BEGINS_WITH", 6);
+
+_defineProperty(utilities_OperatorType, "ENDS_WITH", 7);
+
+_defineProperty(utilities_OperatorType, "GREATER", 8);
+
+_defineProperty(utilities_OperatorType, "GREATER_OR_EQUAL", 9);
+
+_defineProperty(utilities_OperatorType, "SMALLER", 10);
+
+_defineProperty(utilities_OperatorType, "SMALLER_OR_EQUAL", 11);
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/QueryBuilderRule.vue?vue&type=script&lang=js&
 
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -3236,7 +3268,13 @@ var utilities_deepClone = function deepClone(obj) {
 
 /* harmony default export */ var QueryBuilderRulevue_type_script_lang_js_ = ({
   name: "query-builder-rule",
-  props: ['query', 'index', 'rule', 'styled', 'labels'],
+  props: ['query', 'index', 'rule', 'labels'],
+  data: function data() {
+    return {
+      RuleTypes: utilities_RuleTypes,
+      mappedOperators: mapOperators(this.rule.operators)
+    };
+  },
   beforeMount: function beforeMount() {
     if (this.rule.type === 'custom-component') {
       this.$options.components[this.id] = this.rule.component;
@@ -3247,24 +3285,21 @@ var utilities_deepClone = function deepClone(obj) {
       this.$emit('child-deletion-requested', this.index);
     },
     updateQuery: function updateQuery(value) {
-      var updated_query = utilities(this.query);
+      var updated_query = utilities_deepClone(this.query);
       updated_query.value = value;
       this.$emit('update:query', updated_query);
     }
   },
   computed: {
-    isMultipleChoice: function isMultipleChoice() {
-      return ['radio', 'checkbox', 'select'].indexOf(this.rule.inputType) >= 0;
-    },
     isCustomComponent: function isCustomComponent() {
       return this.rule.type === 'custom-component';
     },
     selectOptions: function selectOptions() {
-      if (typeof this.rule.choices === 'undefined') {
+      if (typeof this.rule.options === 'undefined') {
         return {};
       }
 
-      return this.rule.choices.map(function (x) {
+      return this.rule.options.map(function (x) {
         return {
           text: x.label,
           value: x.value
@@ -3273,7 +3308,7 @@ var utilities_deepClone = function deepClone(obj) {
     }
   },
   mounted: function mounted() {
-    var updated_query = utilities(this.query); // Set a default value for these types if one isn't provided already
+    var updated_query = utilities_deepClone(this.query); // Set a default value for these types if one isn't provided already
 
     if (this.query.value === null) {
       if (this.rule.inputType === 'checkbox') {
@@ -3399,8 +3434,8 @@ function normalizeComponent (
 
 var component = normalizeComponent(
   components_QueryBuilderRulevue_type_script_lang_js_,
-  QueryBuilderRulevue_type_template_id_683482e6_render,
-  QueryBuilderRulevue_type_template_id_683482e6_staticRenderFns,
+  QueryBuilderRulevue_type_template_id_a1a18ab2_render,
+  QueryBuilderRulevue_type_template_id_a1a18ab2_staticRenderFns,
   false,
   null,
   null,
@@ -3526,7 +3561,6 @@ var component = normalizeComponent(
 //
 //
 //
-//
 
 
 /* harmony default export */ var QueryBuilderGroupvue_type_script_lang_js_ = ({
@@ -3534,7 +3568,7 @@ var component = normalizeComponent(
   components: {
     QueryBuilderRule: QueryBuilderRule
   },
-  props: ['ruleTypes', 'type', 'query', 'rules', 'index', 'maxDepth', 'depth', 'styled', 'labels'],
+  props: ['ruleTypes', 'type', 'query', 'rules', 'index', 'maxDepth', 'depth', 'labels'],
   methods: {
     tryAddRule: function tryAddRule() {
       this.showRuleDialog = true;
@@ -3546,32 +3580,26 @@ var component = normalizeComponent(
     },
     addRule: function addRule() {
       this.showRuleDialog = false;
-      var updated_query = utilities(this.query);
-      var child = {
-        type: 'query-builder-rule',
+      var updated_query = utilities_deepClone(this.query);
+      updated_query.children.push({
+        type: 'rule',
         query: {
-          rule: this.selectedRule.id,
-          selectedOperator: this.selectedRule.operators[0],
-          selectedOperand: typeof this.selectedRule.operands === "undefined" ? this.selectedRule.label : this.selectedRule.operands[0],
-          value: null
+          id: this.selectedRule.id,
+          operator: this.selectedRule.operators[0],
+          value: null,
+          ruleType: this.selectedRule.type
         }
-      }; // A bit hacky, but `v-model` on `select` requires an array.
-
-      if (this.ruleById(child.query.rule).type === 'multi-select') {
-        child.query.value = [];
-      }
-
-      updated_query.children.push(child);
+      });
       this.$emit('update:query', updated_query);
     },
     addGroup: function addGroup() {
-      var updated_query = utilities(this.query);
+      var updated_query = utilities_deepClone(this.query);
 
       if (this.depth < this.maxDepth) {
         updated_query.children.push({
-          type: 'query-builder-group',
+          type: 'group',
           query: {
-            logicalOperator: this.labels.matchTypeAll,
+            operator: this.labels.matchTypeAll,
             children: []
           }
         });
@@ -3582,7 +3610,7 @@ var component = normalizeComponent(
       this.$emit('child-deletion-requested', this.index);
     },
     removeChild: function removeChild(index) {
-      var updated_query = utilities(this.query);
+      var updated_query = utilities_deepClone(this.query);
       updated_query.children.splice(index, 1);
       this.$emit('update:query', updated_query);
     }
@@ -3606,7 +3634,7 @@ var component = normalizeComponent(
     },
     classObject: function classObject() {
       var classObject = {};
-      classObject['depth-' + this.depth.toString()] = this.styled;
+      classObject['depth-' + this.depth.toString()] = true;
       return classObject;
     }
   }
@@ -3627,8 +3655,8 @@ var QueryBuilderGroupvue_type_style_index_0_lang_scss_ = __webpack_require__("10
 
 var QueryBuilderGroup_component = normalizeComponent(
   components_QueryBuilderGroupvue_type_script_lang_js_,
-  QueryBuilderGroupvue_type_template_id_4a06bbde_render,
-  QueryBuilderGroupvue_type_template_id_4a06bbde_staticRenderFns,
+  QueryBuilderGroupvue_type_template_id_8f97ce04_render,
+  QueryBuilderGroupvue_type_template_id_8f97ce04_staticRenderFns,
   false,
   null,
   null,
@@ -3641,7 +3669,7 @@ var QueryBuilderGroup_component = normalizeComponent(
 
 
 
-//
+
 //
 //
 //
@@ -3682,10 +3710,6 @@ var defaultLabels = {
         return defaultLabels;
       }
     },
-    styled: {
-      type: Boolean,
-      default: true
-    },
     maxDepth: {
       type: Number,
       default: 3,
@@ -3696,53 +3720,27 @@ var defaultLabels = {
     value: Object
   },
   data: function data() {
+    var _ruleTypes;
+
     return {
       depth: 1,
       query: {
-        logicalOperator: "All",
+        operator: "All",
         children: []
       },
-      ruleTypes: {
-        "text": {
-          operators: ['equals', 'does not equal', 'contains', 'does not contain', 'is empty', 'is not empty', 'begins with', 'ends with'],
-          inputType: "text",
-          id: "text-field"
-        },
-        "numeric": {
-          operators: ['=', '<>', '<', '<=', '>', '>='],
-          inputType: "number",
-          id: "number-field"
-        },
-        "custom": {
-          operators: [],
-          inputType: "text",
-          id: "custom-field"
-        },
-        "radio": {
-          operators: [],
-          choices: [],
-          inputType: "radio",
-          id: "radio-field"
-        },
-        "checkbox": {
-          operators: [],
-          choices: [],
-          inputType: "checkbox",
-          id: "checkbox-field"
-        },
-        "select": {
-          operators: ['=', '<>'],
-          choices: [],
-          inputType: "select",
-          id: "select-field"
-        },
-        "multi-select": {
-          operators: ['='],
-          choices: [],
-          inputType: "select",
-          id: "multi-select-field"
-        }
-      }
+      ruleTypes: (_ruleTypes = {}, _defineProperty(_ruleTypes, utilities_RuleTypes.TEXT, {
+        operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL, utilities_OperatorType.CONTAINS, utilities_OperatorType.N_CONTAINS, utilities_OperatorType.EMPTY, utilities_OperatorType.N_EMPTY, utilities_OperatorType.BEGINS_WITH, utilities_OperatorType.ENDS_WITH],
+        inputType: utilities_RuleTypes.TEXT
+      }), _defineProperty(_ruleTypes, utilities_RuleTypes.NUMBER, {
+        operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL, utilities_OperatorType.CONTAINS, utilities_OperatorType.N_CONTAINS, utilities_OperatorType.GREATER, utilities_OperatorType.GREATER_OR_EQUAL, utilities_OperatorType.SMALLER, utilities_OperatorType.SMALLER_OR_EQUAL],
+        inputType: utilities_RuleTypes.NUMBER
+      }), _defineProperty(_ruleTypes, utilities_RuleTypes.SELECT, {
+        operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL],
+        inputType: utilities_RuleTypes.SELECT
+      }), _defineProperty(_ruleTypes, utilities_RuleTypes.MULTI_SELECT, {
+        operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL, utilities_OperatorType.CONTAINS, utilities_OperatorType.N_CONTAINS, utilities_OperatorType.GREATER, utilities_OperatorType.GREATER_OR_EQUAL, utilities_OperatorType.SMALLER, utilities_OperatorType.SMALLER_OR_EQUAL],
+        inputType: utilities_RuleTypes.MULTI_SELECT
+      }), _ruleTypes)
     };
   },
   computed: {
@@ -3751,10 +3749,10 @@ var defaultLabels = {
     },
     mergedRules: function mergedRules() {
       var mergedRules = [];
-      var vm = this;
-      vm.rules.forEach(function (rule) {
-        if (typeof vm.ruleTypes[rule.type] !== "undefined") {
-          mergedRules.push(Object.assign({}, vm.ruleTypes[rule.type], rule));
+      var self = this;
+      this.rules.forEach(function (rule) {
+        if (typeof self.ruleTypes[rule.type] !== "undefined") {
+          mergedRules.push(Object.assign({}, self.ruleTypes[rule.type], rule));
         } else {
           mergedRules.push(rule);
         }
@@ -3766,7 +3764,7 @@ var defaultLabels = {
     var _this = this;
 
     this.$watch('query', function (newQuery) {
-      _this.$emit('input', utilities(newQuery));
+      _this.$emit('input', utilities_deepClone(newQuery));
     }, {
       deep: true
     });

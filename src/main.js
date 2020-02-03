@@ -47,6 +47,21 @@ let rules = [
 			{label: "violet", value: 'Violet'},
 		]
 	},
+	{
+		type: RuleTypes.DATE,
+		id: 5,
+		label: 'Date'
+	},
+	{
+		type: RuleTypes.TIME,
+		id: 6,
+		label: 'Time'
+	},
+	{
+		type: RuleTypes.BOOL,
+		id: 7,
+		label: 'Bool'
+	},
 ];
 
 new Vue({

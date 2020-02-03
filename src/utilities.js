@@ -1,6 +1,3 @@
-import ModelObjectToTextParser from "./Parsers/ModelObjectToTextParser";
-import ModelTextToObjectParser from "./Parsers/ModelTextToObjectParser";
-
 export const deepClone = (obj) => {
 	if (Array.isArray(obj)) {
 		return obj.map(deepClone)
@@ -59,6 +56,9 @@ export class RuleTypes {
 	static TEXT = 1;
 	static SELECT = 2;
 	static MULTI_SELECT = 3;
+	static DATE = 4;
+	static TIME = 5;
+	static BOOL = 6;
 }
 
 export class OperatorType {
@@ -75,7 +75,3 @@ export class OperatorType {
 	static SMALLER = 10;
 	static SMALLER_OR_EQUAL = 11;
 }
-
-export const modelTextToObject = (modelText) => ModelTextToObjectParser.parse(modelText)
-
-export const modelObjectToText = (modelObject) => ModelObjectToTextParser.parse(modelObject)
