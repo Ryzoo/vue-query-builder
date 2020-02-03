@@ -1,105 +1,127 @@
 <template>
-    <v-card  class="vqb-rule">
+    <v-card class="vqb-rule">
         <v-card-text>
             <v-btn
-                    class="remove-button"
-                    color="error"
-                    x-small
-                    @click="remove"
+                class="remove-button"
+                color="error"
+                x-small
+                @click="remove"
             >
                 <v-icon x-small>fa-times</v-icon>
             </v-btn>
 
             <v-row>
-                <v-col cols="auto" class="d-flex align-center">
+                <v-col cols="12" sm="6" md="2" class="d-flex align-center">
                     <b>{{ rule.label }}</b>
                 </v-col>
-                <v-col v-if="rule.operands || !isMultipleChoice">
+                <v-col cols="12" sm="6" md="4">
                     <v-select
-                            hide-details
-                            v-if="rule.operands"
-                            v-model="query.selectedOperand"
-                            :items="rule.operands"
-                            :label="rule.label"
-                            outlined
-                            dense
-                    />
-                    <v-select
-                            hide-details
-                            v-if="!isMultipleChoice"
-                            v-model="query.selectedOperator"
-                            :items="rule.operators"
-                            outlined
-                            dense
+                        hide-details
+                        v-model="query.operator"
+                        :items="mappedOperators"
+                        outlined
+                        dense
+                        label="Rule"
                     />
                 </v-col>
-                <v-col>
+                <v-col cols="12" sm="12" md="6" v-if="query.operator !== OperatorType.EMPTY && query.operator !== OperatorType.N_EMPTY">
                     <v-text-field
-                            hide-details
-                            outlined
-                            v-if="rule.inputType === 'text'"
-                            type="text"
-                            v-model="query.value"
-                            dense
-                            :placeholder="labels.textInputPlaceholder"
+                        hide-details
+                        outlined
+                        v-if="rule.inputType === RuleTypes.TEXT"
+                        type="text"
+                        v-model="query.value"
+                        dense
+                        label="Value"
                     />
                     <v-text-field
-                            hide-details
-                            outlined
-                            v-if="rule.inputType === 'number'"
-                            type="number"
-                            v-model="query.value"
-                            dense
+                        hide-details
+                        outlined
+                        v-if="rule.inputType === RuleTypes.NUMBER"
+                        type="number"
+                        v-model="query.value"
+                        dense
+                        label="Value"
                     />
-
-                    <template v-if="isCustomComponent">
-                        <component
-                                :value="query.value"
-                                @input="updateQuery"
-                                :is="rule.component"
-                        />
-                    </template>
-
-                    <div class="checkbox" v-if="rule.inputType === 'checkbox'">
-                        <v-checkbox
-                                hide-details
-                                v-for="choice in rule.choices"
-                                :key="choice.value"
-                                dense
-                                v-model="query.value"
-                                :value="choice.value"
-                                :label="choice.label"
-                        />
-                    </div>
-
-                    <div class="radio" v-if="rule.inputType === 'radio'">
-                        <v-radio-group
-                                class="mt-0"
-                                hide-details
-                                v-model="query.value"
-                                :mandatory="false"
-                                dense
-                        >
-                            <v-radio
-                                    hide-details
-                                    v-for="choice in rule.choices"
-                                    dense
-                                    :key="choice.value"
-                                    :label="choice.label"
-                                    :value="choice.value"
-                            />
-                        </v-radio-group>
-                    </div>
-
                     <v-select
-                            hide-details
-                            dense
-                            v-if="rule.inputType === 'select'"
-                            v-model="query.value"
-                            :items="selectOptions"
-                            :multiple="rule.type === 'multi-select'"
-                            outlined
+                        hide-details
+                        dense
+                        v-if="rule.inputType === RuleTypes.SELECT || rule.inputType === RuleTypes.MULTI_SELECT"
+                        v-model="query.value"
+                        :items="selectOptions"
+                        :multiple="rule.inputType === RuleTypes.MULTI_SELECT"
+                        outlined
+                        label="Value"
                     />
+                    <v-select
+                        hide-details
+                        dense
+                        v-if="rule.inputType === RuleTypes.BOOL"
+                        v-model="query.value"
+                        :items="boolOptions"
+                        outlined
+                        label="Value"
+                    />
+
+                    <v-dialog
+                        v-if="rule.inputType === RuleTypes.DATE"
+                        ref="dialog2"
+                        v-model="modal"
+                        :return-value.sync="query.value"
+                        persistent
+                        width="290px"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                v-model="query.value"
+                                outlined
+                                label="Value"
+                                dense
+                                prepend-icon="far fa-calendar-alt"
+                                readonly
+                                v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker
+                            v-if="modal"
+                            v-model="query.value"
+                            full-width
+                        >
+                            <v-spacer></v-spacer>
+                            <v-btn outlined color="primary" @click="modal = false">Cancel</v-btn>
+                            <v-btn color="primary" @click="$refs.dialog2.save(query.value)">OK</v-btn>
+                        </v-date-picker>
+                    </v-dialog>
+
+                    <v-dialog
+                        v-if="rule.inputType === RuleTypes.TIME"
+                        ref="dialog"
+                        v-model="modal2"
+                        :return-value.sync="query.value"
+                        persistent
+                        width="290px"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                v-model="query.value"
+                                outlined
+                                label="Value"
+                                dense
+                                prepend-icon="far fa-clock"
+                                readonly
+                                v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-time-picker
+                            v-if="modal2"
+                            v-model="query.value"
+                            full-width
+                        >
+                            <v-spacer></v-spacer>
+                            <v-btn outlined color="primary" @click="modal2 = false">Cancel</v-btn>
+                            <v-btn color="primary" @click="$refs.dialog.save(query.value)">OK</v-btn>
+                        </v-time-picker>
+                    </v-dialog>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -107,67 +129,79 @@
 </template>
 
 <script>
-	import deepClone from '../utilities.js';
+  import {deepClone, RuleTypes, mapOperators, OperatorType} from '../utilities.js';
 
-	export default {
-		name: "query-builder-rule",
+  export default {
+    name: "query-builder-rule",
 
-		props: ['query', 'index', 'rule', 'styled', 'labels'],
+    props: ['query', 'index', 'rule', 'labels'],
 
-		beforeMount() {
-			if (this.rule.type === 'custom-component') {
-				this.$options.components[this.id] = this.rule.component;
-			}
-		},
+    data() {
+      return {
+        modal: false,
+        date: null,
+        modal2: false,
+        time: null,
+        boolOptions: [
+          {text: "TRUE", value: true},
+          {text: "FALSE", value: false},
+        ],
+        RuleTypes,
+        OperatorType,
+        mappedOperators: mapOperators(this.rule.operators)
+      }
+    },
 
-		methods: {
-			remove: function () {
-				this.$emit('child-deletion-requested', this.index);
-			},
-			updateQuery(value) {
-				let updated_query = deepClone(this.query);
-				updated_query.value = value;
-				this.$emit('update:query', updated_query);
-			},
-		},
+    beforeMount() {
+      if (this.rule.type === 'custom-component') {
+        this.$options.components[this.id] = this.rule.component;
+      }
+    },
 
-		computed: {
-			isMultipleChoice() {
-				return ['radio', 'checkbox', 'select'].indexOf(this.rule.inputType) >= 0;
-			},
+    methods: {
+      remove() {
+        this.$emit('child-deletion-requested', this.index);
+      },
+      updateQuery(value) {
+        let updated_query = deepClone(this.query);
+        updated_query.value = value;
+        this.$emit('update:query', updated_query);
+      },
+    },
 
-			isCustomComponent() {
-				return this.rule.type === 'custom-component';
-			},
+    computed: {
+      isCustomComponent() {
+        return this.rule.type === 'custom-component';
+      },
 
-			selectOptions() {
-				if (typeof this.rule.choices === 'undefined') {
-					return {};
-				}
-                return this.rule.choices.map((x) => ({
-					text: x.label,
-					value: x.value
-				}));
-			},
-		},
+      selectOptions() {
+        if (typeof this.rule.options === 'undefined') {
+          return {};
+        }
+        return this.rule.options.map((x) => ({
+          text: x.label,
+          value: x.value
+        }));
+      },
+    },
 
-		mounted() {
-			let updated_query = deepClone(this.query);
+    mounted() {
+      let updated_query = deepClone(this.query);
 
-			// Set a default value for these types if one isn't provided already
-			if (this.query.value === null) {
-				if (this.rule.inputType === 'checkbox') {
-					updated_query.value = [];
-				}
-				if (this.rule.type === 'select') {
-					updated_query.value = this.rule.choices[0].value;
-				}
-				if (this.rule.type === 'custom-component') {
-					updated_query.value = this.rule.default || null;
-				}
+      // Set a default value for these types if one isn't provided already
+      if (this.query.value === null) {
+        if (this.rule.inputType === 'checkbox') {
+          updated_query.value = [];
+        }
+        if (this.rule.type === 'select') {
+          updated_query.value = this.rule.choices[0].value;
+        }
+        if (this.rule.type === 'custom-component') {
+          updated_query.value = this.rule.default || null;
+        }
 
-				this.$emit('update:query', updated_query);
-			}
-		}
-	}
+        this.$emit('update:query', updated_query);
+      }
+    }
+  }
 </script>

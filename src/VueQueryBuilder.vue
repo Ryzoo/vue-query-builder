@@ -1,5 +1,5 @@
 <template>
-    <div class="vue-query-builder" :class="{ 'vue-query-builder-styled': styled }">
+    <div class="vue-query-builder vue-query-builder-styled">
         <query-builder-group
             :index="0"
             :query.sync="query"
@@ -7,7 +7,6 @@
             :rules="mergedRules"
             :maxDepth="maxDepth"
             :depth="depth"
-            :styled="styled"
             :labels="mergedLabels"
             type="query-builder-group"
         />
@@ -15,135 +14,121 @@
 </template>
 
 <script>
-	import QueryBuilderGroup from './components/QueryBuilderGroup.vue';
-	import deepClone from './utilities.js';
+  import QueryBuilderGroup from './components/QueryBuilderGroup.vue';
+  import {deepClone, RuleTypes, OperatorType} from './utilities.js';
 
-	var defaultLabels = {
-		matchType: "Match Type",
-		matchTypeAll: "All",
-		matchTypeAny: "Any",
-		addRule: "Add Rule",
-		removeRule: "&times;",
-		addGroup: "Add Group",
-		removeGroup: "&times;",
-		textInputPlaceholder: "value",
-	};
+  const defaultLabels = {
+    matchType: "Match Type",
+    matchTypeAll: "All",
+    matchTypeAny: "Any",
+    addRule: "Add Rule",
+    removeRule: "&times;",
+    addGroup: "Add Group",
+    removeGroup: "&times;",
+    textInputPlaceholder: "value",
+  };
 
-	export default {
-		name: 'vue-query-builder',
+  export default {
+    name: 'vue-query-builder',
 
-		components: {
-			QueryBuilderGroup
-		},
+    components: {
+      QueryBuilderGroup
+    },
 
-		props: {
-			rules: Array,
-			labels: {
-				type: Object,
-				default() {
-					return defaultLabels;
-				}
-			},
-			styled: {
-				type: Boolean,
-				default: true
-			},
-			maxDepth: {
-				type: Number,
-				default: 3,
-				validator: function (value) {
-					return value >= 1
-				}
-			},
-			value: Object
-		},
+    props: {
+      rules: Array,
+      labels: {
+        type: Object,
+        default() {
+          return defaultLabels;
+        }
+      },
+      maxDepth: {
+        type: Number,
+        default: 3,
+        validator: function (value) {
+          return value >= 1
+        }
+      },
+      value: Object
+    },
 
-		data() {
-			return {
-				depth: 1,
-				query: {
-					logicalOperator: "All",
-					children: []
-				},
-				ruleTypes: {
-					"text": {
-						operators: ['equals', 'does not equal', 'contains', 'does not contain', 'is empty', 'is not empty', 'begins with', 'ends with'],
-						inputType: "text",
-						id: "text-field"
-					},
-					"numeric": {
-						operators: ['=', '<>', '<', '<=', '>', '>='],
-						inputType: "number",
-						id: "number-field"
-					},
-					"custom": {
-						operators: [],
-						inputType: "text",
-						id: "custom-field"
-					},
-					"radio": {
-						operators: [],
-						choices: [],
-						inputType: "radio",
-						id: "radio-field"
-					},
-					"checkbox": {
-						operators: [],
-						choices: [],
-						inputType: "checkbox",
-						id: "checkbox-field"
-					},
-					"select": {
-						operators: ['=', '<>'],
-						choices: [],
-						inputType: "select",
-						id: "select-field"
-					},
-					"multi-select": {
-						operators: ['='],
-						choices: [],
-						inputType: "select",
-						id: "multi-select-field"
-					},
-				}
-			}
-		},
+    data() {
+      return {
+        depth: 1,
+        query: {
+          operator: "All",
+          children: []
+        },
+        ruleTypes: {
+          [RuleTypes.DATE]: {
+            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.EMPTY, OperatorType.N_EMPTY, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL],
+            inputType: RuleTypes.DATE,
+          },
+          [RuleTypes.TIME]: {
+            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.EMPTY, OperatorType.N_EMPTY, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL],
+            inputType: RuleTypes.TIME,
+          },
+          [RuleTypes.BOOL]: {
+            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.EMPTY, OperatorType.N_EMPTY],
+            inputType: RuleTypes.BOOL,
+          },
+          [RuleTypes.TEXT]: {
+            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.CONTAINS, OperatorType.N_CONTAINS, OperatorType.EMPTY, OperatorType.N_EMPTY, OperatorType.BEGINS_WITH, OperatorType.ENDS_WITH],
+            inputType: RuleTypes.TEXT,
+          },
+          [RuleTypes.NUMBER]: {
+            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.CONTAINS, OperatorType.N_CONTAINS, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL],
+            inputType: RuleTypes.NUMBER,
+          },
+          [RuleTypes.SELECT]: {
+            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL],
+            inputType: RuleTypes.SELECT,
+          },
+          [RuleTypes.MULTI_SELECT]: {
+            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.CONTAINS, OperatorType.N_CONTAINS, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL],
+            inputType: RuleTypes.MULTI_SELECT,
+          },
+        }
+      }
+    },
 
-		computed: {
-			mergedLabels() {
-				return Object.assign({}, defaultLabels, this.labels);
-			},
+    computed: {
+      mergedLabels() {
+        return Object.assign({}, defaultLabels, this.labels);
+      },
 
-			mergedRules() {
-				var mergedRules = [];
-				var vm = this;
+      mergedRules() {
+        let mergedRules = [];
+        const self = this;
 
-				vm.rules.forEach(function (rule) {
-					if (typeof vm.ruleTypes[rule.type] !== "undefined") {
-						mergedRules.push(Object.assign({}, vm.ruleTypes[rule.type], rule));
-					} else {
-						mergedRules.push(rule);
-					}
-				});
+        this.rules.forEach(function (rule) {
+          if (typeof self.ruleTypes[rule.type] !== "undefined") {
+            mergedRules.push(Object.assign({}, self.ruleTypes[rule.type], rule));
+          }
+          else {
+            mergedRules.push(rule);
+          }
+        });
 
-				return mergedRules;
-			}
-		},
+        return mergedRules;
+      }
+    },
 
-		mounted() {
-			this.$watch(
-				'query',
-				newQuery => {
-					this.$emit('input', deepClone(newQuery));
-				}, {
-					deep: true
-				});
+    mounted() {
+      this.$watch(
+          'query',
+          newQuery => {
+            this.$emit('input', deepClone(newQuery))
+          },
+          {deep: true}
+      );
 
-			if (typeof this.$options.propsData.value !== "undefined") {
-				this.query = Object.assign(this.query, this.$options.propsData.value);
-			}
-		}
-	}
+      if (typeof this.$options.propsData.value !== "undefined") {
+        this.query = Object.assign(this.query, this.$options.propsData.value)
+      }
+    }
+  }
 </script>
 
 <style>
