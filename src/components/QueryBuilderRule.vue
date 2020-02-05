@@ -37,7 +37,7 @@
                     <v-text-field
                         hide-details
                         outlined
-                        v-if="rule.inputType === RuleTypes.NUMBER"
+                        v-if="rule.inputType === RuleTypes.NUMBER || rule.inputType === RuleTypes.AGGREGATE"
                         type="number"
                         v-model="query.value"
                         dense

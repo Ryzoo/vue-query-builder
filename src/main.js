@@ -62,6 +62,11 @@ let rules = [
 		id: 7,
 		label: 'Bool'
 	},
+	{
+		type: RuleTypes.AGGREGATE,
+		id: 8,
+		label: 'Aggregate'
+	},
 ];
 
 new Vue({

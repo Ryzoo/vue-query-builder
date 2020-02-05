@@ -61,6 +61,10 @@
           children: []
         },
         ruleTypes: {
+          [RuleTypes.AGGREGATE]: {
+            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.EMPTY, OperatorType.N_EMPTY, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL],
+            inputType: RuleTypes.AGGREGATE,
+          },
           [RuleTypes.DATE]: {
             operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.EMPTY, OperatorType.N_EMPTY, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL],
             inputType: RuleTypes.DATE,
