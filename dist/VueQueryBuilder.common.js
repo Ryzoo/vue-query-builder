@@ -102,6 +102,37 @@ module.exports = String(test) === '[object z]';
 
 /***/ }),
 
+/***/ "0366":
+/***/ (function(module, exports, __webpack_require__) {
+
+var aFunction = __webpack_require__("1c0b");
+
+// optional / simple context binding
+module.exports = function (fn, that, length) {
+  aFunction(fn);
+  if (that === undefined) return fn;
+  switch (length) {
+    case 0: return function () {
+      return fn.call(that);
+    };
+    case 1: return function (a) {
+      return fn.call(that, a);
+    };
+    case 2: return function (a, b) {
+      return fn.call(that, a, b);
+    };
+    case 3: return function (a, b, c) {
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function (/* ...args */) {
+    return fn.apply(that, arguments);
+  };
+};
+
+
+/***/ }),
+
 /***/ "057f":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -214,11 +245,15 @@ for (var COLLECTION_NAME in DOMIterables) {
 "use strict";
 
 var $forEach = __webpack_require__("b727").forEach;
-var sloppyArrayMethod = __webpack_require__("b301");
+var arrayMethodIsStrict = __webpack_require__("a640");
+var arrayMethodUsesToLength = __webpack_require__("ae40");
+
+var STRICT_METHOD = arrayMethodIsStrict('forEach');
+var USES_TO_LENGTH = arrayMethodUsesToLength('forEach');
 
 // `Array.prototype.forEach` method implementation
 // https://tc39.github.io/ecma262/#sec-array.prototype.foreach
-module.exports = sloppyArrayMethod('forEach') ? function forEach(callbackfn /* , thisArg */) {
+module.exports = (!STRICT_METHOD || !USES_TO_LENGTH) ? function forEach(callbackfn /* , thisArg */) {
   return $forEach(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
 } : [].forEach;
 
@@ -265,7 +300,7 @@ module.exports = function (it) {
 
 var fails = __webpack_require__("d039");
 var wellKnownSymbol = __webpack_require__("b622");
-var V8_VERSION = __webpack_require__("60ae");
+var V8_VERSION = __webpack_require__("2d00");
 
 var SPECIES = wellKnownSymbol('species');
 
@@ -416,6 +451,43 @@ if (NOT_GENERIC || INCORRECT_NAME) {
 
 /***/ }),
 
+/***/ "2d00":
+/***/ (function(module, exports, __webpack_require__) {
+
+var global = __webpack_require__("da84");
+var userAgent = __webpack_require__("342f");
+
+var process = global.process;
+var versions = process && process.versions;
+var v8 = versions && versions.v8;
+var match, version;
+
+if (v8) {
+  match = v8.split('.');
+  version = match[0] + match[1];
+} else if (userAgent) {
+  match = userAgent.match(/Edge\/(\d+)/);
+  if (!match || match[1] >= 74) {
+    match = userAgent.match(/Chrome\/(\d+)/);
+    if (match) version = match[1];
+  }
+}
+
+module.exports = version && +version;
+
+
+/***/ }),
+
+/***/ "342f":
+/***/ (function(module, exports, __webpack_require__) {
+
+var getBuiltIn = __webpack_require__("d066");
+
+module.exports = getBuiltIn('navigator', 'userAgent') || '';
+
+
+/***/ }),
+
 /***/ "37e8":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -494,6 +566,23 @@ defineIterator(String, 'String', function (iterated) {
 /***/ (function(module, exports) {
 
 module.exports = {};
+
+
+/***/ }),
+
+/***/ "4160":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $ = __webpack_require__("23e7");
+var forEach = __webpack_require__("17c2");
+
+// `Array.prototype.forEach` method
+// https://tc39.github.io/ecma262/#sec-array.prototype.foreach
+$({ target: 'Array', proto: true, forced: [].forEach != forEach }, {
+  forEach: forEach
+});
 
 
 /***/ }),
@@ -645,9 +734,9 @@ var store = __webpack_require__("c6cd");
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.6.1',
+  version: '3.6.4',
   mode: IS_PURE ? 'pure' : 'global',
-  copyright: '© 2019 Denis Pushkarev (zloirock.ru)'
+  copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 });
 
 
@@ -727,33 +816,6 @@ module.exports = function (bitmap, value) {
     value: value
   };
 };
-
-
-/***/ }),
-
-/***/ "60ae":
-/***/ (function(module, exports, __webpack_require__) {
-
-var global = __webpack_require__("da84");
-var userAgent = __webpack_require__("b39a");
-
-var process = global.process;
-var versions = process && process.versions;
-var v8 = versions && versions.v8;
-var match, version;
-
-if (v8) {
-  match = v8.split('.');
-  version = match[0] + match[1];
-} else if (userAgent) {
-  match = userAgent.match(/Edge\/(\d+)/);
-  if (!match || match[1] >= 74) {
-    match = userAgent.match(/Chrome\/(\d+)/);
-    if (match) version = match[1];
-  }
-}
-
-module.exports = version && +version;
 
 
 /***/ }),
@@ -1032,7 +1094,7 @@ exports.f = Object.getOwnPropertySymbols;
 
 var path = __webpack_require__("428f");
 var has = __webpack_require__("5135");
-var wrappedWellKnownSymbolModule = __webpack_require__("c032");
+var wrappedWellKnownSymbolModule = __webpack_require__("e538");
 var defineProperty = __webpack_require__("9bf2").f;
 
 module.exports = function (NAME) {
@@ -1169,16 +1231,19 @@ module.exports = Object.create || function create(O, Properties) {
 var $ = __webpack_require__("23e7");
 var $find = __webpack_require__("b727").find;
 var addToUnscopables = __webpack_require__("44d2");
+var arrayMethodUsesToLength = __webpack_require__("ae40");
 
 var FIND = 'find';
 var SKIPS_HOLES = true;
+
+var USES_TO_LENGTH = arrayMethodUsesToLength(FIND);
 
 // Shouldn't skip holes
 if (FIND in []) Array(1)[FIND](function () { SKIPS_HOLES = false; });
 
 // `Array.prototype.find` method
 // https://tc39.github.io/ecma262/#sec-array.prototype.find
-$({ target: 'Array', proto: true, forced: SKIPS_HOLES }, {
+$({ target: 'Array', proto: true, forced: SKIPS_HOLES || !USES_TO_LENGTH }, {
   find: function find(callbackfn /* , that = undefined */) {
     return $find(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
   }
@@ -1322,7 +1387,7 @@ var fails = __webpack_require__("d039");
 
 // Thank's IE8 for his funny defineProperty
 module.exports = !fails(function () {
-  return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
+  return Object.defineProperty({}, 1, { get: function () { return 7; } })[1] != 7;
 });
 
 
@@ -1508,6 +1573,10 @@ var toObject = __webpack_require__("7b0b");
 var arraySpeciesCreate = __webpack_require__("65f0");
 var createProperty = __webpack_require__("8418");
 var arrayMethodHasSpeciesSupport = __webpack_require__("1dde");
+var arrayMethodUsesToLength = __webpack_require__("ae40");
+
+var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('splice');
+var USES_TO_LENGTH = arrayMethodUsesToLength('splice', { ACCESSORS: true, 0: 0, 1: 2 });
 
 var max = Math.max;
 var min = Math.min;
@@ -1517,7 +1586,7 @@ var MAXIMUM_ALLOWED_LENGTH_EXCEEDED = 'Maximum allowed length exceeded';
 // `Array.prototype.splice` method
 // https://tc39.github.io/ecma262/#sec-array.prototype.splice
 // with adding support of @@species
-$({ target: 'Array', proto: true, forced: !arrayMethodHasSpeciesSupport('splice') }, {
+$({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGTH }, {
   splice: function splice(start, deleteCount /* , ...items */) {
     var O = toObject(this);
     var len = toLength(O.length);
@@ -1605,7 +1674,7 @@ var sharedKey = __webpack_require__("f772");
 var hiddenKeys = __webpack_require__("d012");
 var uid = __webpack_require__("90e3");
 var wellKnownSymbol = __webpack_require__("b622");
-var wrappedWellKnownSymbolModule = __webpack_require__("c032");
+var wrappedWellKnownSymbolModule = __webpack_require__("e538");
 var defineWellKnownSymbol = __webpack_require__("746f");
 var setToStringTag = __webpack_require__("d44e");
 var InternalStateModule = __webpack_require__("69f3");
@@ -1888,6 +1957,24 @@ hiddenKeys[HIDDEN] = true;
 
 /***/ }),
 
+/***/ "a640":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var fails = __webpack_require__("d039");
+
+module.exports = function (METHOD_NAME, argument) {
+  var method = [][METHOD_NAME];
+  return !!method && fails(function () {
+    // eslint-disable-next-line no-useless-call,no-throw-literal
+    method.call(null, argument || function () { throw 1; }, 1);
+  });
+};
+
+
+/***/ }),
+
 /***/ "a691":
 /***/ (function(module, exports) {
 
@@ -2013,6 +2100,40 @@ module.exports = function () {
 
 /***/ }),
 
+/***/ "ae40":
+/***/ (function(module, exports, __webpack_require__) {
+
+var DESCRIPTORS = __webpack_require__("83ab");
+var fails = __webpack_require__("d039");
+var has = __webpack_require__("5135");
+
+var defineProperty = Object.defineProperty;
+var cache = {};
+
+var thrower = function (it) { throw it; };
+
+module.exports = function (METHOD_NAME, options) {
+  if (has(cache, METHOD_NAME)) return cache[METHOD_NAME];
+  if (!options) options = {};
+  var method = [][METHOD_NAME];
+  var ACCESSORS = has(options, 'ACCESSORS') ? options.ACCESSORS : false;
+  var argument0 = has(options, 0) ? options[0] : thrower;
+  var argument1 = has(options, 1) ? options[1] : undefined;
+
+  return cache[METHOD_NAME] = !!method && !fails(function () {
+    if (ACCESSORS && !DESCRIPTORS) return true;
+    var O = { length: -1 };
+
+    if (ACCESSORS) defineProperty(O, 1, { enumerable: true, get: thrower });
+    else O[1] = 1;
+
+    method.call(O, argument0, argument1);
+  });
+};
+
+
+/***/ }),
+
 /***/ "ae93":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2075,34 +2196,6 @@ module.exports = TO_STRING_TAG_SUPPORT ? {}.toString : function toString() {
 
 /***/ }),
 
-/***/ "b301":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var fails = __webpack_require__("d039");
-
-module.exports = function (METHOD_NAME, argument) {
-  var method = [][METHOD_NAME];
-  return !method || !fails(function () {
-    // eslint-disable-next-line no-useless-call,no-throw-literal
-    method.call(null, argument || function () { throw 1; }, 1);
-  });
-};
-
-
-/***/ }),
-
-/***/ "b39a":
-/***/ (function(module, exports, __webpack_require__) {
-
-var getBuiltIn = __webpack_require__("d066");
-
-module.exports = getBuiltIn('navigator', 'userAgent') || '';
-
-
-/***/ }),
-
 /***/ "b622":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2151,7 +2244,7 @@ $({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES }, {
 /***/ "b727":
 /***/ (function(module, exports, __webpack_require__) {
 
-var bind = __webpack_require__("f8c2");
+var bind = __webpack_require__("0366");
 var IndexedObject = __webpack_require__("44ad");
 var toObject = __webpack_require__("7b0b");
 var toLength = __webpack_require__("50c4");
@@ -2216,16 +2309,6 @@ module.exports = {
   // https://tc39.github.io/ecma262/#sec-array.prototype.findIndex
   findIndex: createMethod(6)
 };
-
-
-/***/ }),
-
-/***/ "c032":
-/***/ (function(module, exports, __webpack_require__) {
-
-var wellKnownSymbol = __webpack_require__("b622");
-
-exports.f = wellKnownSymbol;
 
 
 /***/ }),
@@ -2530,14 +2613,12 @@ module.exports = function (it, TAG, STATIC) {
 
 var $ = __webpack_require__("23e7");
 var $map = __webpack_require__("b727").map;
-var fails = __webpack_require__("d039");
 var arrayMethodHasSpeciesSupport = __webpack_require__("1dde");
+var arrayMethodUsesToLength = __webpack_require__("ae40");
 
 var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('map');
 // FF49- issue
-var USES_TO_LENGTH = HAS_SPECIES_SUPPORT && !fails(function () {
-  [].map.call({ length: -1, 0: 1 }, function (it) { throw it; });
-});
+var USES_TO_LENGTH = arrayMethodUsesToLength('map');
 
 // `Array.prototype.map` method
 // https://tc39.github.io/ecma262/#sec-array.prototype.map
@@ -2784,6 +2865,16 @@ addToUnscopables('entries');
 
 /***/ }),
 
+/***/ "e538":
+/***/ (function(module, exports, __webpack_require__) {
+
+var wellKnownSymbol = __webpack_require__("b622");
+
+exports.f = wellKnownSymbol;
+
+
+/***/ }),
+
 /***/ "e893":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2917,41 +3008,11 @@ module.exports = function (key) {
 
 /***/ }),
 
-/***/ "f8c2":
-/***/ (function(module, exports, __webpack_require__) {
-
-var aFunction = __webpack_require__("1c0b");
-
-// optional / simple context binding
-module.exports = function (fn, that, length) {
-  aFunction(fn);
-  if (that === undefined) return fn;
-  switch (length) {
-    case 0: return function () {
-      return fn.call(that);
-    };
-    case 1: return function (a) {
-      return fn.call(that, a);
-    };
-    case 2: return function (a, b) {
-      return fn.call(that, a, b);
-    };
-    case 3: return function (a, b, c) {
-      return fn.call(that, a, b, c);
-    };
-  }
-  return function (/* ...args */) {
-    return fn.apply(that, arguments);
-  };
-};
-
-
-/***/ }),
-
 /***/ "fb15":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/setPublicPath.js
@@ -2971,12 +3032,15 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"bd44cc92-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueQueryBuilder.vue?vue&type=template&id=77089700&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4cce44dc-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueQueryBuilder.vue?vue&type=template&id=1a569b6a&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-query-builder vue-query-builder-styled"},[_c('query-builder-group',{attrs:{"index":0,"query":_vm.query,"ruleTypes":_vm.ruleTypes,"rules":_vm.mergedRules,"maxDepth":_vm.maxDepth,"depth":_vm.depth,"labels":_vm.mergedLabels,"type":"query-builder-group"},on:{"update:query":function($event){_vm.query=$event}}})],1)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueQueryBuilder.vue?vue&type=template&id=77089700&
+// CONCATENATED MODULE: ./src/VueQueryBuilder.vue?vue&type=template&id=1a569b6a&
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.for-each.js
+var es_array_for_each = __webpack_require__("4160");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.number.constructor.js
 var es_number_constructor = __webpack_require__("a9e3");
@@ -3002,7 +3066,7 @@ function _defineProperty(obj, key, value) {
 
   return obj;
 }
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"bd44cc92-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/QueryBuilderGroup.vue?vue&type=template&id=8f97ce04&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4cce44dc-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/QueryBuilderGroup.vue?vue&type=template&id=8f97ce04&
 var QueryBuilderGroupvue_type_template_id_8f97ce04_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-card',{staticClass:"vqb-group",class:_vm.classObject},[_c('v-card-title',[_c('v-select',{attrs:{"items":_vm.logicalOperatorList,"label":_vm.labels.matchType,"outlined":"","hide-details":"","dense":""},model:{value:(_vm.query.operator),callback:function ($$v) {_vm.$set(_vm.query, "operator", $$v)},expression:"query.operator"}}),(this.depth > 1)?_c('v-btn',{staticClass:"remove-button",attrs:{"color":"error","x-small":""},on:{"click":_vm.remove}},[_c('v-icon',{attrs:{"x-small":""}},[_vm._v("fa-times")])],1):_vm._e()],1),_c('v-card-text',[_c('v-row',[_c('v-col',{staticClass:"mb-2 speed-dial-container",attrs:{"cols":"12"}},[_c('v-divider'),_c('v-speed-dial',{attrs:{"bottom":"","left":"","direction":"right"},scopedSlots:_vm._u([{key:"activator",fn:function(){return [_c('v-btn',{attrs:{"color":"primary","x-small":"","fab":""},model:{value:(_vm.fab),callback:function ($$v) {_vm.fab=$$v},expression:"fab"}},[(_vm.fab)?_c('v-icon',[_vm._v("fa-times")]):_c('v-icon',[_vm._v("fa-plus")])],1)]},proxy:true}]),model:{value:(_vm.fab),callback:function ($$v) {_vm.fab=$$v},expression:"fab"}},[_c('v-btn',{attrs:{"color":"primary","small":""},on:{"click":_vm.tryAddRule}},[_vm._v(" Add Rule ")]),(this.depth < this.maxDepth)?_c('v-btn',{attrs:{"color":"primary","small":""},on:{"click":_vm.addGroup}},[_vm._v(" Add Groups ")]):_vm._e()],1)],1),_c('v-col',{attrs:{"cols":"12"}},[_c('div',{staticClass:"group-child px-5 py-2"},[(_vm.query.children.length === 0)?_c('v-alert',{attrs:{"dense":"","text":"","type":"info"}},[_vm._v(" No rules here! Add some "),_c('b',[_vm._v("rules")]),_vm._v(" or "),_c('b',[_vm._v("group of rules")]),_vm._v(" using button above. ")]):_vm._e(),_vm._l((_vm.query.children),function(child,index){return _c(child.type === 'rule' ? 'query-builder-rule' : 'query-builder-group',{key:index,tag:"component",attrs:{"type":child.type,"query":child.query,"ruleTypes":_vm.ruleTypes,"rules":_vm.rules,"rule":_vm.ruleById(child.query.id),"index":index,"maxDepth":_vm.maxDepth,"depth":_vm.depth + 1,"labels":_vm.labels},on:{"update:query":function($event){return _vm.$set(child, "query", $event)},"child-deletion-requested":_vm.removeChild}})})],2)])],1)],1),_c('v-dialog',{attrs:{"persistent":"","max-width":"290"},model:{value:(_vm.showRuleDialog),callback:function ($$v) {_vm.showRuleDialog=$$v},expression:"showRuleDialog"}},[_c('v-card',[_c('v-card-title',{staticClass:"headline"},[_vm._v("Add new rule")]),_c('v-card-text',[_c('p',[_vm._v("Select an element to describe the rules")]),_c('v-select',{attrs:{"items":_vm.rulesList,"label":"Select rule","outlined":""},model:{value:(_vm.selectedRule),callback:function ($$v) {_vm.selectedRule=$$v},expression:"selectedRule"}})],1),_c('v-card-actions',[_c('v-spacer'),_c('v-btn',{attrs:{"color":"primary","text":""},on:{"click":function($event){_vm.showRuleDialog = false}}},[_vm._v("Cancel")]),_c('v-btn',{attrs:{"color":"primary"},on:{"click":_vm.addRule}},[_vm._v("Add new rule")])],1)],1)],1)],1)}
 var QueryBuilderGroupvue_type_template_id_8f97ce04_staticRenderFns = []
 
@@ -3024,16 +3088,16 @@ var es_object_to_string = __webpack_require__("d3b7");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.regexp.to-string.js
 var es_regexp_to_string = __webpack_require__("25f0");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"bd44cc92-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/QueryBuilderRule.vue?vue&type=template&id=601354ec&
-var QueryBuilderRulevue_type_template_id_601354ec_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-card',{staticClass:"vqb-rule"},[_c('v-card-text',[_c('v-btn',{staticClass:"remove-button",attrs:{"color":"error","x-small":""},on:{"click":_vm.remove}},[_c('v-icon',{attrs:{"x-small":""}},[_vm._v("fa-times")])],1),_c('v-row',[_c('v-col',{staticClass:"d-flex align-center",attrs:{"cols":"12","sm":"6","md":"2"}},[_c('b',[_vm._v(_vm._s(_vm.rule.label))])]),_c('v-col',{attrs:{"cols":"12","sm":"6","md":"4"}},[_c('v-select',{attrs:{"hide-details":"","items":_vm.mappedOperators,"outlined":"","dense":"","label":"Rule"},model:{value:(_vm.query.operator),callback:function ($$v) {_vm.$set(_vm.query, "operator", $$v)},expression:"query.operator"}})],1),(_vm.query.operator !== _vm.OperatorType.EMPTY && _vm.query.operator !== _vm.OperatorType.N_EMPTY)?_c('v-col',{attrs:{"cols":"12","sm":"12","md":"6"}},[(_vm.rule.inputType === _vm.RuleTypes.TEXT)?_c('v-text-field',{attrs:{"hide-details":"","outlined":"","type":"text","dense":"","label":"Value"},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.rule.inputType === _vm.RuleTypes.NUMBER)?_c('v-text-field',{attrs:{"hide-details":"","outlined":"","type":"number","dense":"","label":"Value"},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.rule.inputType === _vm.RuleTypes.SELECT || _vm.rule.inputType === _vm.RuleTypes.MULTI_SELECT)?_c('v-select',{attrs:{"hide-details":"","dense":"","items":_vm.selectOptions,"multiple":_vm.rule.inputType === _vm.RuleTypes.MULTI_SELECT,"outlined":"","label":"Value"},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.rule.inputType === _vm.RuleTypes.BOOL)?_c('v-select',{attrs:{"hide-details":"","dense":"","items":_vm.boolOptions,"outlined":"","label":"Value"},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.rule.inputType === _vm.RuleTypes.DATE)?_c('v-dialog',{ref:"dialog2",attrs:{"return-value":_vm.query.value,"persistent":"","width":"290px"},on:{"update:returnValue":function($event){return _vm.$set(_vm.query, "value", $event)},"update:return-value":function($event){return _vm.$set(_vm.query, "value", $event)}},scopedSlots:_vm._u([{key:"activator",fn:function(ref){
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4cce44dc-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/QueryBuilderRule.vue?vue&type=template&id=46ec3802&
+var QueryBuilderRulevue_type_template_id_46ec3802_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-card',{staticClass:"vqb-rule"},[_c('v-card-text',[_c('v-btn',{staticClass:"remove-button",attrs:{"color":"error","x-small":""},on:{"click":_vm.remove}},[_c('v-icon',{attrs:{"x-small":""}},[_vm._v("fa-times")])],1),_c('v-row',[_c('v-col',{staticClass:"d-flex align-center",attrs:{"cols":"12","sm":"6","md":"2"}},[_c('b',[_vm._v(_vm._s(_vm.rule.label))])]),_c('v-col',{attrs:{"cols":"12","sm":"6","md":"4"}},[_c('v-select',{attrs:{"hide-details":"","items":_vm.mappedOperators,"outlined":"","dense":"","label":"Rule"},model:{value:(_vm.query.operator),callback:function ($$v) {_vm.$set(_vm.query, "operator", $$v)},expression:"query.operator"}})],1),(_vm.query.operator !== _vm.OperatorType.EMPTY && _vm.query.operator !== _vm.OperatorType.N_EMPTY)?_c('v-col',{attrs:{"cols":"12","sm":"12","md":"6"}},[(_vm.rule.inputType === _vm.RuleTypes.TEXT)?_c('v-text-field',{attrs:{"hide-details":"","outlined":"","type":"text","dense":"","label":"Value"},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.rule.inputType === _vm.RuleTypes.NUMBER || _vm.rule.inputType === _vm.RuleTypes.AGGREGATE)?_c('v-text-field',{attrs:{"hide-details":"","outlined":"","type":"number","dense":"","label":"Value"},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.rule.inputType === _vm.RuleTypes.SELECT || _vm.rule.inputType === _vm.RuleTypes.MULTI_SELECT)?_c('v-select',{attrs:{"hide-details":"","dense":"","items":_vm.selectOptions,"multiple":_vm.rule.inputType === _vm.RuleTypes.MULTI_SELECT,"outlined":"","label":"Value"},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.rule.inputType === _vm.RuleTypes.BOOL || _vm.rule.inputType === _vm.RuleTypes.BOOL_INPUT)?_c('v-select',{attrs:{"hide-details":"","dense":"","items":_vm.boolOptions,"outlined":"","label":"Value"},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}}):_vm._e(),(_vm.rule.inputType === _vm.RuleTypes.DATE)?_c('v-dialog',{ref:"dialog2",attrs:{"return-value":_vm.query.value,"persistent":"","width":"290px"},on:{"update:returnValue":function($event){return _vm.$set(_vm.query, "value", $event)},"update:return-value":function($event){return _vm.$set(_vm.query, "value", $event)}},scopedSlots:_vm._u([{key:"activator",fn:function(ref){
 var on = ref.on;
 return [_c('v-text-field',_vm._g({attrs:{"outlined":"","label":"Value","dense":"","prepend-icon":"far fa-calendar-alt","readonly":""},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}},on))]}}],null,false,405712533),model:{value:(_vm.modal),callback:function ($$v) {_vm.modal=$$v},expression:"modal"}},[(_vm.modal)?_c('v-date-picker',{attrs:{"full-width":""},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}},[_c('v-spacer'),_c('v-btn',{attrs:{"outlined":"","color":"primary"},on:{"click":function($event){_vm.modal = false}}},[_vm._v("Cancel")]),_c('v-btn',{attrs:{"color":"primary"},on:{"click":function($event){return _vm.$refs.dialog2.save(_vm.query.value)}}},[_vm._v("OK")])],1):_vm._e()],1):_vm._e(),(_vm.rule.inputType === _vm.RuleTypes.TIME)?_c('v-dialog',{ref:"dialog",attrs:{"return-value":_vm.query.value,"persistent":"","width":"290px"},on:{"update:returnValue":function($event){return _vm.$set(_vm.query, "value", $event)},"update:return-value":function($event){return _vm.$set(_vm.query, "value", $event)}},scopedSlots:_vm._u([{key:"activator",fn:function(ref){
 var on = ref.on;
 return [_c('v-text-field',_vm._g({attrs:{"outlined":"","label":"Value","dense":"","prepend-icon":"far fa-clock","readonly":""},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}},on))]}}],null,false,2329567163),model:{value:(_vm.modal2),callback:function ($$v) {_vm.modal2=$$v},expression:"modal2"}},[(_vm.modal2)?_c('v-time-picker',{attrs:{"full-width":""},model:{value:(_vm.query.value),callback:function ($$v) {_vm.$set(_vm.query, "value", $$v)},expression:"query.value"}},[_c('v-spacer'),_c('v-btn',{attrs:{"outlined":"","color":"primary"},on:{"click":function($event){_vm.modal2 = false}}},[_vm._v("Cancel")]),_c('v-btn',{attrs:{"color":"primary"},on:{"click":function($event){return _vm.$refs.dialog.save(_vm.query.value)}}},[_vm._v("OK")])],1):_vm._e()],1):_vm._e()],1):_vm._e()],1)],1)],1)}
-var QueryBuilderRulevue_type_template_id_601354ec_staticRenderFns = []
+var QueryBuilderRulevue_type_template_id_46ec3802_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/QueryBuilderRule.vue?vue&type=template&id=601354ec&
+// CONCATENATED MODULE: ./src/components/QueryBuilderRule.vue?vue&type=template&id=46ec3802&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.object.keys.js
 var es_object_keys = __webpack_require__("b64b");
@@ -3070,23 +3134,23 @@ var web_dom_collections_iterator = __webpack_require__("ddb0");
 
 
 
-
-function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
-
 function _typeof(obj) {
-  if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function _typeof(obj) {
-      return _typeof2(obj);
+      return typeof obj;
     };
   } else {
     _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
   }
 
   return _typeof(obj);
 }
 // CONCATENATED MODULE: ./src/utilities.js
+
 
 
 
@@ -3174,6 +3238,10 @@ _defineProperty(utilities_RuleTypes, "DATE", 4);
 _defineProperty(utilities_RuleTypes, "TIME", 5);
 
 _defineProperty(utilities_RuleTypes, "BOOL", 6);
+
+_defineProperty(utilities_RuleTypes, "AGGREGATE", 7);
+
+_defineProperty(utilities_RuleTypes, "BOOL_INPUT", 8);
 
 var utilities_OperatorType = function OperatorType() {
   _classCallCheck(this, OperatorType);
@@ -3484,7 +3552,7 @@ function normalizeComponent (
       // for template-only hot-reload because in that case the render fn doesn't
       // go through the normalizer
       options._injectStyles = hook
-      // register for functioal component in vue file
+      // register for functional component in vue file
       var originalRender = options.render
       options.render = function renderWithStyleInjection (h, context) {
         hook.call(context)
@@ -3515,8 +3583,8 @@ function normalizeComponent (
 
 var component = normalizeComponent(
   components_QueryBuilderRulevue_type_script_lang_js_,
-  QueryBuilderRulevue_type_template_id_601354ec_render,
-  QueryBuilderRulevue_type_template_id_601354ec_staticRenderFns,
+  QueryBuilderRulevue_type_template_id_46ec3802_render,
+  QueryBuilderRulevue_type_template_id_46ec3802_staticRenderFns,
   false,
   null,
   null,
@@ -3751,6 +3819,7 @@ var QueryBuilderGroup_component = normalizeComponent(
 
 
 
+
 //
 //
 //
@@ -3809,7 +3878,10 @@ var defaultLabels = {
         operator: "All",
         children: []
       },
-      ruleTypes: (_ruleTypes = {}, _defineProperty(_ruleTypes, utilities_RuleTypes.DATE, {
+      ruleTypes: (_ruleTypes = {}, _defineProperty(_ruleTypes, utilities_RuleTypes.AGGREGATE, {
+        operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL, utilities_OperatorType.EMPTY, utilities_OperatorType.N_EMPTY, utilities_OperatorType.GREATER, utilities_OperatorType.GREATER_OR_EQUAL, utilities_OperatorType.SMALLER, utilities_OperatorType.SMALLER_OR_EQUAL],
+        inputType: utilities_RuleTypes.AGGREGATE
+      }), _defineProperty(_ruleTypes, utilities_RuleTypes.DATE, {
         operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL, utilities_OperatorType.EMPTY, utilities_OperatorType.N_EMPTY, utilities_OperatorType.GREATER, utilities_OperatorType.GREATER_OR_EQUAL, utilities_OperatorType.SMALLER, utilities_OperatorType.SMALLER_OR_EQUAL],
         inputType: utilities_RuleTypes.DATE
       }), _defineProperty(_ruleTypes, utilities_RuleTypes.TIME, {
@@ -3818,6 +3890,9 @@ var defaultLabels = {
       }), _defineProperty(_ruleTypes, utilities_RuleTypes.BOOL, {
         operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL, utilities_OperatorType.EMPTY, utilities_OperatorType.N_EMPTY],
         inputType: utilities_RuleTypes.BOOL
+      }), _defineProperty(_ruleTypes, utilities_RuleTypes.BOOL_INPUT, {
+        operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL, utilities_OperatorType.EMPTY, utilities_OperatorType.N_EMPTY],
+        inputType: utilities_RuleTypes.BOOL_INPUT
       }), _defineProperty(_ruleTypes, utilities_RuleTypes.TEXT, {
         operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL, utilities_OperatorType.CONTAINS, utilities_OperatorType.N_CONTAINS, utilities_OperatorType.EMPTY, utilities_OperatorType.N_EMPTY, utilities_OperatorType.BEGINS_WITH, utilities_OperatorType.ENDS_WITH],
         inputType: utilities_RuleTypes.TEXT
