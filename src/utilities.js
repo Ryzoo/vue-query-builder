@@ -60,6 +60,7 @@ export class RuleTypes {
 	static TIME = 5;
 	static BOOL = 6;
 	static AGGREGATE = 7;
+	static BOOL_INPUT = 8;
 }
 
 export class OperatorType {

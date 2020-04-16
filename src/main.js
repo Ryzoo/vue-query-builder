@@ -67,6 +67,11 @@ let rules = [
 		id: 8,
 		label: 'Aggregate'
 	},
+	{
+		type: RuleTypes.BOOL_INPUT,
+		id: 9,
+		label: 'Bool input'
+	},
 ];
 
 new Vue({

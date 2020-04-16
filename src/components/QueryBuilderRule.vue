@@ -56,7 +56,7 @@
                     <v-select
                         hide-details
                         dense
-                        v-if="rule.inputType === RuleTypes.BOOL"
+                        v-if="rule.inputType === RuleTypes.BOOL || rule.inputType === RuleTypes.BOOL_INPUT"
                         v-model="query.value"
                         :items="boolOptions"
                         outlined

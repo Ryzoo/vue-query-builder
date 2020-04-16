@@ -77,6 +77,10 @@
             operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.EMPTY, OperatorType.N_EMPTY],
             inputType: RuleTypes.BOOL,
           },
+          [RuleTypes.BOOL_INPUT]: {
+            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.EMPTY, OperatorType.N_EMPTY],
+            inputType: RuleTypes.BOOL_INPUT,
+          },
           [RuleTypes.TEXT]: {
             operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.CONTAINS, OperatorType.N_CONTAINS, OperatorType.EMPTY, OperatorType.N_EMPTY, OperatorType.BEGINS_WITH, OperatorType.ENDS_WITH],
             inputType: RuleTypes.TEXT,
