@@ -1,6 +1,6 @@
 {
   "name": "vue-query-builder-vuetifyjs",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "description": "Vue Query Builder is a user interface that makes it easy for your users to create queries of any kind. It's useful if you need an interface for generating reports, filtering data, and more. This fork move it to Vuetify.js",
   "main": "./dist/VueQueryBuilder.common.js",
   "scripts": {

@@ -11,7 +11,7 @@
             </v-btn>
 
             <v-row>
-                <v-col cols="12" sm="6" md="2" class="d-flex align-center">
+                <v-col cols="12" sm="6" md="2" class="d-flex align-center text-break">
                     <b>{{ rule.label }}</b>
                 </v-col>
                 <v-col cols="12" sm="6" md="4">
