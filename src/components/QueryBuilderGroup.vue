@@ -21,41 +21,25 @@
         </v-card-title>
         <v-card-text>
             <v-row>
-                <v-col cols="12" class="mb-2 speed-dial-container">
+                <v-col cols="12">
                     <v-divider/>
-                    <v-speed-dial
-                            v-model="fab"
-                            bottom
-                            left
-                            direction="right"
+                </v-col>
+                <v-col cols="12" class="speed-dial-container">
+                    <v-btn
+                        color="primary"
+                        small
+                        @click="tryAddRule"
                     >
-                        <template v-slot:activator>
-                            <v-btn
-                                    v-model="fab"
-                                    color="primary"
-                                    x-small
-                                    fab
-                            >
-                                <v-icon v-if="fab">fa-times</v-icon>
-                                <v-icon v-else>fa-plus</v-icon>
-                            </v-btn>
-                        </template>
-                        <v-btn
-                                color="primary"
-                                small
-                                @click="tryAddRule"
-                        >
-                            Add Rule
-                        </v-btn>
-                        <v-btn
-                                color="primary"
-                                small
-                                v-if="this.depth < this.maxDepth"
-                                @click="addGroup"
-                        >
-                            Add Groups
-                        </v-btn>
-                    </v-speed-dial>
+                        Add Rule
+                    </v-btn>
+                    <v-btn
+                        color="primary"
+                        small
+                        v-if="this.depth < this.maxDepth"
+                        @click="addGroup"
+                    >
+                        Add Groups
+                    </v-btn>
                 </v-col>
                 <v-col cols="12" >
                     <div class="group-child px-5 py-2">
@@ -87,12 +71,12 @@
             </v-row>
         </v-card-text>
 
-        <v-dialog v-model="showRuleDialog" persistent max-width="290">
+        <v-dialog v-model="showRuleDialog" persistent max-width="800">
             <v-card>
                 <v-card-title class="headline">Add new rule</v-card-title>
                 <v-card-text>
                     <p>Select an element to describe the rules</p>
-                    <v-select
+                    <v-autocomplete
                             v-model="selectedRule"
                             :items="rulesList"
                             label="Select rule"
@@ -215,12 +199,9 @@
     }
 
     .speed-dial-container {
-        position: relative;
-
-        .v-speed-dial {
-            position: absolute;
-            left: 10px;
-            bottom: -3px;
+        margin-top: -39px;
+        button{
+            margin-right: 5px;
         }
     }
 </style>
