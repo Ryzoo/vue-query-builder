@@ -94,7 +94,7 @@
             inputType: RuleTypes.SELECT,
           },
           [RuleTypes.MULTI_SELECT]: {
-            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.CONTAINS, OperatorType.N_CONTAINS, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL],
+            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.CONTAINS, OperatorType.N_CONTAINS, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL, OperatorType.EMPTY, OperatorType.N_EMPTY],
             inputType: RuleTypes.MULTI_SELECT,
           },
         }

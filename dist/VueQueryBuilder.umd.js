@@ -3170,12 +3170,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4cce44dc-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueQueryBuilder.vue?vue&type=template&id=1a569b6a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4cce44dc-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/VueQueryBuilder.vue?vue&type=template&id=5881dbdb&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"vue-query-builder vue-query-builder-styled"},[_c('query-builder-group',{attrs:{"index":0,"query":_vm.query,"ruleTypes":_vm.ruleTypes,"rules":_vm.mergedRules,"maxDepth":_vm.maxDepth,"depth":_vm.depth,"labels":_vm.mergedLabels,"type":"query-builder-group"},on:{"update:query":function($event){_vm.query=$event}}})],1)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/VueQueryBuilder.vue?vue&type=template&id=1a569b6a&
+// CONCATENATED MODULE: ./src/VueQueryBuilder.vue?vue&type=template&id=5881dbdb&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.for-each.js
 var es_array_for_each = __webpack_require__("4160");
@@ -4060,7 +4060,7 @@ var defaultLabels = {
         operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL],
         inputType: utilities_RuleTypes.SELECT
       }), _defineProperty(_ruleTypes, utilities_RuleTypes.MULTI_SELECT, {
-        operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL, utilities_OperatorType.CONTAINS, utilities_OperatorType.N_CONTAINS, utilities_OperatorType.GREATER, utilities_OperatorType.GREATER_OR_EQUAL, utilities_OperatorType.SMALLER, utilities_OperatorType.SMALLER_OR_EQUAL],
+        operators: [utilities_OperatorType.EQUAL, utilities_OperatorType.N_EQUAL, utilities_OperatorType.CONTAINS, utilities_OperatorType.N_CONTAINS, utilities_OperatorType.GREATER, utilities_OperatorType.GREATER_OR_EQUAL, utilities_OperatorType.SMALLER, utilities_OperatorType.SMALLER_OR_EQUAL, utilities_OperatorType.EMPTY, utilities_OperatorType.N_EMPTY],
         inputType: utilities_RuleTypes.MULTI_SELECT
       }), _ruleTypes)
     };
