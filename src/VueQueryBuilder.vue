@@ -30,11 +30,9 @@
 
   export default {
     name: 'vue-query-builder',
-
     components: {
       QueryBuilderGroup
     },
-
     props: {
       rules: Array,
       labels: {
@@ -52,7 +50,6 @@
       },
       value: Object
     },
-
     data() {
       return {
         depth: 1,
@@ -89,6 +86,10 @@
             operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.CONTAINS, OperatorType.N_CONTAINS, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL],
             inputType: RuleTypes.NUMBER,
           },
+          [RuleTypes.CURRENCY]: {
+            operators: [OperatorType.EQUAL, OperatorType.N_EQUAL, OperatorType.CONTAINS, OperatorType.N_CONTAINS, OperatorType.GREATER, OperatorType.GREATER_OR_EQUAL, OperatorType.SMALLER, OperatorType.SMALLER_OR_EQUAL],
+            inputType: RuleTypes.NUMBER,
+          },
           [RuleTypes.SELECT]: {
             operators: [OperatorType.EQUAL, OperatorType.N_EQUAL],
             inputType: RuleTypes.SELECT,
@@ -100,12 +101,10 @@
         }
       }
     },
-
     computed: {
       mergedLabels() {
         return Object.assign({}, defaultLabels, this.labels);
       },
-
       mergedRules() {
         let mergedRules = [];
         const self = this;
@@ -122,7 +121,6 @@
         return mergedRules;
       }
     },
-
     mounted() {
       this.$watch(
           'query',

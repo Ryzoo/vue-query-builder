@@ -9,7 +9,6 @@
             >
                 <v-icon x-small>fa-times</v-icon>
             </v-btn>
-
             <v-row>
                 <v-col cols="12" sm="6" md="2" class="d-flex align-center text-break">
                     <b>{{ rule.label }}</b>
@@ -24,7 +23,8 @@
                         label="Rule"
                     />
                 </v-col>
-                <v-col cols="12" sm="12" md="6" v-if="query.operator !== OperatorType.EMPTY && query.operator !== OperatorType.N_EMPTY">
+                <v-col cols="12" sm="12" md="6"
+                       v-if="query.operator !== OperatorType.EMPTY && query.operator !== OperatorType.N_EMPTY">
                     <v-text-field
                         hide-details
                         outlined
@@ -37,7 +37,7 @@
                     <v-text-field
                         hide-details
                         outlined
-                        v-if="rule.inputType === RuleTypes.NUMBER || rule.inputType === RuleTypes.AGGREGATE"
+                        v-if="rule.inputType === RuleTypes.NUMBER || rule.inputType === RuleTypes.AGGREGATE || rule.inputType === RuleTypes.CURRENCY"
                         type="number"
                         v-model="query.value"
                         dense
@@ -62,7 +62,6 @@
                         outlined
                         label="Value"
                     />
-
                     <v-dialog
                         v-if="rule.inputType === RuleTypes.DATE"
                         ref="dialog2"
@@ -133,9 +132,7 @@
 
   export default {
     name: "query-builder-rule",
-
     props: ['query', 'index', 'rule', 'labels'],
-
     data() {
       return {
         modal: false,
@@ -151,13 +148,11 @@
         mappedOperators: mapOperators(this.rule.operators)
       }
     },
-
     beforeMount() {
       if (this.rule.type === 'custom-component') {
         this.$options.components[this.id] = this.rule.component;
       }
     },
-
     methods: {
       remove() {
         this.$emit('child-deletion-requested', this.index);
@@ -168,12 +163,7 @@
         this.$emit('update:query', updated_query);
       },
     },
-
     computed: {
-      isCustomComponent() {
-        return this.rule.type === 'custom-component';
-      },
-
       selectOptions() {
         if (typeof this.rule.options === 'undefined') {
           return {};

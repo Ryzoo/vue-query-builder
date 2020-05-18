@@ -139,27 +139,20 @@
           this.$emit('update:query', updated_query);
         }
       },
-
       remove() {
         this.$emit('child-deletion-requested', this.index);
       },
-
       removeChild(index) {
         let updated_query = deepClone(this.query);
         updated_query.children.splice(index, 1);
         this.$emit('update:query', updated_query);
       },
-
       prepareRules(newValue) {
         const rulesId = this.rulesList.map(x => `${x.value.id}`)
         let updated_query = deepClone(newValue);
-
         const startCount = updated_query.children.length;
-
         updated_query.children = updated_query.children.filter((x) => x.type !== 'rule' || rulesId.includes(`${x.query.id}`))
-
         const endCount = updated_query.children.length;
-
         if(startCount !== endCount )
             this.$emit('update:query', updated_query);
       }

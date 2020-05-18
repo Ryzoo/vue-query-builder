@@ -82,18 +82,15 @@ new Vue({
 		},
 	}),
 	components: {VueQueryBuilder},
-
 	data: {
 		rules: rules,
 		output: {},
 	},
-
 	methods: {
 		updateQuery: function (value) {
 			this.output = value;
 		}
 	},
-
 	computed: {
 		outputFormatted() {
 			return JSON.stringify(this.output, null, 2);
